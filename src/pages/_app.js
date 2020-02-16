@@ -2,11 +2,10 @@ import "../style/base.css";
 import React from "react";
 import App from "next/app";
 import Head from "next/head";
-
 import { observer } from "mobx-react";
-import storage from "localforage";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import storage from "localforage";
 import theme from "../style/theme";
 
 if (typeof window !== "undefined") {

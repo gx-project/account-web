@@ -1,19 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
 import { observer } from "mobx-react";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import Slider from "@material-ui/core/Slider";
 import { useDropzone } from "react-dropzone";
-
-import { stylesHook, BottomContent } from "../style/login";
-import RichInput from "./richInput";
 import AvatarEditor from "react-avatar-editor";
+import { Typography, Slider } from "@material-ui/core";
 
 import State from "../stores/register";
-import StepButton from "./stepButton";
+import { StepButton } from "./";
+import { stylesHook } from "../style/login";
 
 function PictureStep({ onResult, title = true, current, ...props }) {
-  const { container, flexColumn, button } = stylesHook();
+  const { container, flexColumn } = stylesHook();
   const [changed, setChanged] = useState(false);
   const [file, setFile] = useState(false);
   const [zoom, setZoom] = useState(1);
@@ -22,7 +18,7 @@ function PictureStep({ onResult, title = true, current, ...props }) {
     setChanged(true);
     setFile(file);
   }, []);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   const handleZoom = (event, zoom) => {
     !changed && setChanged(true);

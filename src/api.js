@@ -66,7 +66,7 @@ export const account = {
 export const auth = {
   identify(nbr) {
     const body = new FormData();
-    body.append("nbr", nbr);
+    body.append("id", nbr);
 
     return middleware(
       fetch(`${API_ENDPOINT}/auth/identify`, {
@@ -75,13 +75,13 @@ export const auth = {
       })
     );
   },
-  authorize(nbr, pw) {
+  credential(id, pw) {
     const body = new FormData();
-    body.append("nbr", nbr);
+    body.append("id", id);
     body.append("pw", pw);
 
     return middleware(
-      fetch(`${API_ENDPOINT}/auth/sign`, {
+      fetch(`${API_ENDPOINT}/auth/credential`, {
         method: "POST",
         body
       })

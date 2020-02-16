@@ -1,20 +1,19 @@
 import { observer } from "mobx-react";
-
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Badge from "@material-ui/core/Badge";
-import Avatar from "@material-ui/core/Avatar";
-import Container from "@material-ui/core/Container";
-import Paper from "@material-ui/core/Paper";
 import Link from "next/link";
 import Router from "next/router";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Badge,
+  Avatar,
+  Container,
+  Paper
+} from "@material-ui/core";
 
 import State, { AccountState } from "../../stores/dashboard";
-
 import { stylesHook, EditIcon } from "../../style/dashboard";
-
-import { LoadingPage, Footer } from "../../components";
+import { Page, Footer } from "../../components";
 import { Account, Security, Payment } from "../../components/dashboard";
 
 function DashboardIndex() {
@@ -23,10 +22,8 @@ function DashboardIndex() {
     State.setPanel(expanded ? panel : false);
   };
 
-  return State.loading ? (
-    <LoadingPage />
-  ) : (
-    <>
+  return (
+    <Page auth={true}>
       <AppBar position="static" style={{ marginBottom: "15px" }}>
         <Toolbar className={classes.toolbar}>
           <div className={classes.content} variant="h5">
@@ -67,7 +64,7 @@ function DashboardIndex() {
         </Link>
         <Footer.Small style={{ margin: "10% 0" }} />
       </Container>
-    </>
+    </Page>
   );
 }
 

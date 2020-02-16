@@ -1,6 +1,5 @@
-import TextField from "@material-ui/core/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import NumberFormat from "react-number-format";
+import { TextField, InputAdornment } from "@material-ui/core";
 
 export default function RichInput({ onChange, prefix, format, ...props }) {
   if (!format) {

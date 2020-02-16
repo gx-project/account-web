@@ -1,25 +1,22 @@
 import { observer } from "mobx-react";
 
 import NumberFormat from "react-number-format";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ExpansionPanelActions from "@material-ui/core/ExpansionPanelActions";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import Divider from "@material-ui/core/Divider";
-
-import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
+import {
+  Typography,
+  Grid,
+  TextField,
+  ExpansionPanelActions,
+  Button,
+  Paper,
+  Divider,
+  FormControl,
+  FormHelperText
+} from "@material-ui/core";
 
 import { AccountState } from "../../stores/dashboard";
-
 import { RichInput } from "..";
-
 import { stylesHook } from "../../style/dashboard";
+import CreatePanel from "./createPanel";
 
 function AccountPanel(props) {
   const classes = stylesHook();
@@ -27,13 +24,7 @@ function AccountPanel(props) {
   const { data, updateData, errors } = AccountState;
 
   return (
-    <ExpansionPanel {...props}>
-      <ExpansionPanelSummary
-        expandIcon={<ExpandMoreIcon />}
-        id="account-panel-head"
-      >
-        <Typography className={classes.heading}>Conta</Typography>
-      </ExpansionPanelSummary>
+    <CreatePanel title="Conta" id="account-panel-head" {...props}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Paper elevation={0} className={classes.accountPaper}>
@@ -127,17 +118,20 @@ function AccountPanel(props) {
         <Typography variant="h6" display="block" gutterBottom>
           Contato
         </Typography>
-        <RichInput
-          fullWidth
-          isNumericString
-          label="Celular"
-          name="phone"
-          format="(##) #####-####"
-          type="tel"
-          defaultValue={data.nbr}
-        />
+        {data.phones.map((phone, idx) => (
+          <RichInput
+            fullWidth
+            key={idx}
+            isNumericString
+            label="Celular"
+            name="phone"
+            format="(##) #####-####"
+            type="tel"
+            defaultValue={phone}
+          />
+        ))}
       </div>
-    </ExpansionPanel>
+    </CreatePanel>
   );
 }
 

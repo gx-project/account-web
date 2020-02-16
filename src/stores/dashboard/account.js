@@ -1,12 +1,9 @@
 import { observable, action, toJS } from "mobx";
 import storage from "localforage";
 
-import DashboardState from "./index";
-
-import { regex } from "../../utils";
-
-import { account } from "../../api";
 import { STORE_ACCOUNT_KEY } from "../../constants";
+import { regex } from "../../utils";
+import { account } from "../../api";
 
 class DashboardAccount {
   @observable initialized = false;
@@ -47,7 +44,7 @@ class DashboardAccount {
     this.loading[action] = true;
 
     if (!this.validation(action)) return;
-    console.log(this.updateData[action]);
+
     const response = await account.update(action, this.updateData[action]);
 
     if (!response.ok) {
@@ -108,7 +105,7 @@ class DashboardAccount {
 
   async pos_authMode() {
     await this.hydrate(this.updateData.authMode);
-    this.updateData.profile = {};
+    this.updateData.authMode = {};
   }
 }
 

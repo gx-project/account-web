@@ -1,15 +1,7 @@
 import { observer } from "mobx-react";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import { FormControl, FormHelperText } from "@material-ui/core";
 
-import Container from "@material-ui/core/Container";
-import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import Link from "@material-ui/core/Link";
-import Button from "@material-ui/core/Button";
-
-import { RichInput } from "./";
-
-import StepButton from "./stepButton";
+import { RichInput, StepButton } from "./";
 
 function NumberStep({
   next,
@@ -20,9 +12,9 @@ function NumberStep({
   ...props
 }) {
   return (
-    <div {...props}>
+    <>
       {Top}
-      <form onSubmit={next}>
+      <form onSubmit={next} style={{ width: "100%" }}>
         <RichInput
           autoFocus
           fullWidth
@@ -42,7 +34,7 @@ function NumberStep({
         <StepButton onClick={next} loading={loading} />
       </form>
       {Bottom}
-    </div>
+    </>
   );
 }
 

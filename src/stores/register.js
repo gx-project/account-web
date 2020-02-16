@@ -1,7 +1,6 @@
 import { observable, action } from "mobx";
 import storage from "localforage";
-import Router from "next/router";
-import AppState from "../store";
+import Dashboard, { AccountState } from "./dashboard";
 
 import { isValidCPF } from "@brazilian-utils/brazilian-utils";
 
@@ -110,7 +109,7 @@ class RegisterState {
     this.cpf.length === 11 && this.checkCPF();
   }
 
-  setBirth({ formattedValue, value }) {
+  setBirth({ value }) {
     const day = parseInt(value.slice(0, 2));
     const month = parseInt(value.slice(2, 4));
     const year = parseInt(value.slice(4, 8));
@@ -259,13 +258,13 @@ class RegisterState {
   }
 
   async login() {
-    const { ok, data } = await auth.authorize(this.nbr, this.pw);
+    const { ok, data } = await auth.credential(this.nbr, this.pw);
 
     if (ok) {
       const { token } = data;
 
-      AppState.token = token;
       await storage.setItem("token", token);
+      Dashboard.init(token);
       return true;
     }
 
@@ -278,8 +277,8 @@ class RegisterState {
 
     const { ok, data } = await account.photo(blob);
 
-    if (AppState.user) {
-      AppState.updateUser({ photo: data.url });
+    if (ok) {
+      AccountState.hydrate({ photo: data.url });
     }
 
     this.loading = false;

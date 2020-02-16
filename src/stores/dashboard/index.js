@@ -2,8 +2,7 @@ import Router from "next/router";
 import storage from "localforage";
 import { observable, action } from "mobx";
 
-import { account } from "../../api";
-import { STORE_ACCOUNT_KEY, STORE_TOKEN_KEY } from "../../constants";
+import { STORE_TOKEN_KEY } from "../../constants";
 import AccountState from "./account";
 
 export { AccountState };
@@ -29,20 +28,15 @@ class DashboardState {
     this.panel = panel;
   }
 
-  @action async updateUser(data) {
-    this.user = { ...this.user, ...data };
-    await storage.setItem("user", this.user);
-  }
-
-  @action async init(token, user) {
+  @action async init(token) {
     try {
-      token = token || (await storage.getItem(STORE_TOKEN_KEY));
+      // token =
 
-      if (!token) return Router.push("/login");
+      // if (!token) return Router.push("/login");
 
-      this.token = token;
+      this.token = token || (await storage.getItem(STORE_TOKEN_KEY));
 
-      AccountState.hydrate();
+      if (this.token) await AccountState.hydrate();
     } catch (e) {
       console.error(e);
     } finally {

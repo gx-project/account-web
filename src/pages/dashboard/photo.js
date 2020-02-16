@@ -1,18 +1,17 @@
 import { useState } from "react";
 import Router from "next/router";
-
 import Alert from "@material-ui/lab/Alert";
-
-import Container from "@material-ui/core/Container";
-import Snackbar from "@material-ui/core/Snackbar";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import {
+  Container,
+  Snackbar,
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton
+} from "@material-ui/core";
 
-import { PhotoEditor } from "../../components";
+import { Page, PhotoEditor } from "../../components";
 import { stylesHook } from "../../style/dashboard";
 
 export default function History() {
@@ -27,7 +26,7 @@ export default function History() {
   };
 
   return (
-    <div className={classes.historyRoot}>
+    <Page auth={true} className={classes.historyRoot}>
       <AppBar position="static">
         <Container maxWidth="md">
           <Toolbar>
@@ -66,6 +65,6 @@ export default function History() {
           {result ? "Foto atualizada com sucesso" : "Tente novamente"}
         </Alert>
       </Snackbar>
-    </div>
+    </Page>
   );
 }

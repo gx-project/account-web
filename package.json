@@ -17,7 +17,6 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.42",
     "@zeit/next-css": "^1.0.1",
-    "blueimp-canvas-to-blob": "^3.17.0",
     "isomorphic-unfetch": "^3.0.0",
     "localforage": "^1.7.3",
     "mobx": "^5.15.4",
@@ -34,6 +33,7 @@
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-proposal-decorators": "^7.8.3",
     "babel-eslint": "^10.0.3",
+    "babel-plugin-transform-imports": "^2.0.0",
     "eslint": "^6.8.0",
     "eslint-plugin-prettier": "^3.1.2",
     "prettier": "^1.19.1"

@@ -1,17 +1,15 @@
 import { observer } from "mobx-react";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import Link from "@material-ui/core/Link";
-import Typography from "@material-ui/core/Typography";
-import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
-
-import PasswordInput from "../passwordInput";
+import {
+  Avatar,
+  Link,
+  Typography,
+  FormControl,
+  FormHelperText
+} from "@material-ui/core";
 
 import LoginState from "../../stores/login";
-import StepButton from "../stepButton";
-import { stylesHook, BottomContent } from "../../style/login";
+import { StepButton, PasswordInput } from "../";
+import { BottomContent } from "../../style/login";
 
 function next(e) {
   e && e.preventDefault();
@@ -20,42 +18,39 @@ function next(e) {
   }
 }
 
-function NumberStep() {
-  const { container, flexColumn } = stylesHook();
-
-  const error = !!LoginState.error;
-
+function NumberStep({ user, next, loading, error }) {
   return (
     <>
-      <div className={`${container} ${flexColumn}`}>
-        <Avatar
-          style={{ width: "80px", height: "80px", margin: "0 auto" }}
-          src={LoginState.user.photo}
-        />
-        <Typography
-          style={{ marginTop: "3%", textTransform: "capitalize" }}
-          component="h3"
-          variant="subtitle1"
-        >
-          {LoginState.user.fn}
-        </Typography>
-      </div>
-      <form onSubmit={next}>
+      {user && (
+        <>
+          <Avatar
+            style={{ width: "80px", height: "80px", margin: "0 auto" }}
+            src={user.photo}
+          />
+          <Typography
+            style={{ marginTop: "3%", textTransform: "capitalize" }}
+            component="h3"
+            variant="subtitle1"
+          >
+            {user.fn}
+          </Typography>
+        </>
+      )}
+      <form onSubmit={next} style={{ width: "100%" }}>
         <PasswordInput
-          autoFocus
           margin="normal"
           fullWidth
           id="pw"
           label="Senha"
-          error={error}
+          error={!!error}
           onChange={({ target: { value } }) => {
-            LoginState.setPassword(value);
+            LoginState.password = value;
           }}
         />
         <FormControl error style={{ display: error ? "initial" : "none" }}>
-          <FormHelperText>{LoginState.error}</FormHelperText>
+          <FormHelperText>{error}</FormHelperText>
         </FormControl>
-        <StepButton onClick={next} loading={LoginState.loading}>
+        <StepButton onClick={next} loading={loading}>
           entrar
         </StepButton>
       </form>

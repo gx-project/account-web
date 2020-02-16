@@ -4,35 +4,31 @@ import Router from "next/router";
 import Dashboard from "./dashboard";
 
 import { regex } from "../utils";
-
 import { auth } from "../api";
 
 class LoginState {
   @observable loading = false;
   @observable step = 0;
-  @observable number = "";
-  @observable password = "";
+  id = "";
+  code = "";
+  password = "";
   @observable user = {
     fn: "",
-    profilePic: ""
+    photo: ""
   };
   @observable error = false;
-  @action setNumber(value) {
-    this.number = value;
-    if (value && value.length === 11 && !regex.phone.test(value)) {
-      this.error = "Número inválido";
-    } else {
-      this.error = false;
-    }
-  }
+
   @action setStep(step) {
     this.step = step;
   }
 
-  @action async checkNumber() {
+  @action async sendId() {
     this.error = false;
     this.loading = true;
-    const { data } = await auth.identify(this.number);
+
+    if (!this.verify()) return (this.loading = false);
+
+    const { data } = await auth.identify(this.id);
 
     if (data.user) {
       this.step = 1;
@@ -46,10 +42,9 @@ class LoginState {
 
   @action async sendCredential() {
     this.loading = true;
-    const { ok, data, status } = await auth.authorize(
-      this.number,
-      this.password
-    );
+    if (!this.verify()) return (this.loading = false);
+
+    const { ok, data, status } = await auth.credential(this.id, this.password);
 
     if (ok) {
       const { token } = data;
@@ -71,8 +66,31 @@ class LoginState {
     this.loading = false;
   }
 
-  @action setPassword(pw) {
-    this.password = pw;
+  verify() {
+    switch (this.step) {
+      case 0:
+        if (!regex.phone.test(this.id) && !regex.user.test(this.id)) {
+          this.error = "Precisa ser seu celular ou nome de usuário.";
+          return false;
+        }
+        break;
+      case 1:
+        if (this.password.length < 6) {
+          this.error = "Senhas tem no mínimo 6 caracteres.";
+          return false;
+        }
+        break;
+      case 2:
+        const length = this.code.length;
+        if (length !== 5) {
+          this.error = `O código de verificação contém 5 digitos, ${
+            length === 0 ? "o campo ta vazio" : `você digitou ${length}`
+          }.`;
+          return false;
+        }
+        break;
+    }
+    return true;
   }
 }
 
