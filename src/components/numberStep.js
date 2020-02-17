@@ -14,7 +14,7 @@ function NumberStep({
   return (
     <>
       {Top}
-      <form onSubmit={next} style={{ width: "100%" }}>
+      <form onSubmit={next}>
         <RichInput
           autoFocus
           fullWidth

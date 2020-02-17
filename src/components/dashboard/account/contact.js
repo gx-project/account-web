@@ -7,7 +7,8 @@ import {
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
-  IconButton
+  IconButton,
+  Tooltip
 } from "@material-ui/core";
 
 import { AccountState } from "../../../stores/dashboard";
@@ -60,12 +61,14 @@ export default observer(function Contact() {
               />
               <ListItemSecondaryAction>
                 {data.authSecondFactor === value ? (
-                  <IconButton
-                    edge="end"
-                    aria-label={`Usado na verificação de 2 fatores`}
-                  >
-                    <InfoIcon />
-                  </IconButton>
+                  <Tooltip title="Usado na verificação de 2 fatores">
+                    <IconButton
+                      edge="end"
+                      aria-label={`Usado na verificação de 2 fatores`}
+                    >
+                      <InfoIcon />
+                    </IconButton>
+                  </Tooltip>
                 ) : (
                   list.length > 1 && (
                     <IconButton edge="end" aria-label={`remover ${value}`}>

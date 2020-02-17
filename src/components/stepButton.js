@@ -7,18 +7,10 @@ export default function StepButton({ children, loading, ...props }) {
     <Button
       className={button}
       type="submit"
-      fullWidth
       variant="contained"
       disableElevation
       disabled={loading}
       color="primary"
-      style={{
-        marginTop: "10px",
-        marginLeft: "auto",
-        marginRight: "auto",
-        display: "block"
-      }}
-      type="submit"
       {...props}
     >
       {loading ? (

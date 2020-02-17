@@ -10,7 +10,6 @@ class LoginState {
   @observable loading = false;
   @observable step = 0;
   id = "";
-  ref = "";
   code = "";
   password = "";
   @observable user = {
@@ -49,7 +48,6 @@ class LoginState {
 
     if (ok) {
       if (data.next === "code") {
-        this.ref = data.id;
         this.loading = false;
         this.step = 2;
         return;
@@ -74,7 +72,7 @@ class LoginState {
 
     if (!this.verify()) return (this.loading = false);
 
-    const { ok, data, status } = await auth.code(this.ref, this.code);
+    const { ok, data, status } = await auth.code(this.id, this.code);
 
     if (ok) {
       await this.authenticated(data.token);
@@ -91,7 +89,7 @@ class LoginState {
     switch (this.step) {
       case 0:
         if (!regex.phone.test(this.id) && !regex.user.test(this.id)) {
-          this.error = "Precisa ser seu celular ou nome de usuário.";
+          this.error = "Precisa ser um número de celular ou nome de usuário.";
           return false;
         }
         break;

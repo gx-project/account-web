@@ -78,7 +78,10 @@ export const styles = theme => ({
     margin: theme.spacing(2),
     marginTop: 0,
     padding: theme.spacing(2),
-    backgroundColor: theme.palette.grey[100]
+    backgroundColor:
+      theme.palette.type === "dark"
+        ? theme.palette.background.default
+        : theme.palette.grey[100]
   },
   divider: {
     marginTop: `${theme.spacing(2)}px !important`,

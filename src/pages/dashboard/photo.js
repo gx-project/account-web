@@ -26,7 +26,7 @@ export default function History() {
   };
 
   return (
-    <Page auth={true} className={classes.historyRoot}>
+    <Page auth={true} redirect="/login" className={classes.historyRoot}>
       <AppBar position="static">
         <Container maxWidth="md">
           <Toolbar>

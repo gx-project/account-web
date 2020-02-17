@@ -84,8 +84,8 @@ export const auth = {
   credential(id, pw) {
     return auth.request("credential", { id, pw });
   },
-  code(ref, code) {
-    return auth.request("code", { ref, code });
+  code(id, code) {
+    return auth.request("code", { id, code });
   }
 };
 

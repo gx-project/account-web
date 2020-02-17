@@ -8,7 +8,7 @@ export default function Identifier({ next, error, loading, ...props }) {
       <RichInput
         fullWidth
         margin="normal"
-        label="Celular ou usuário"
+        label="Celular ou nome de usuário"
         name="phone"
         error={!!error}
         style={{ marginBottom: "3px" }}
@@ -17,7 +17,13 @@ export default function Identifier({ next, error, loading, ...props }) {
       <FormControl error style={{ display: error ? "initial" : "none" }}>
         <FormHelperText>{error}</FormHelperText>
       </FormControl>
-      <StepButton onClick={next} loading={loading} />
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <StepButton
+          onClick={next}
+          loading={loading}
+          style={{ alignSelf: "flex-end" }}
+        />
+      </div>
     </form>
   );
 }

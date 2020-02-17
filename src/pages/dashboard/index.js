@@ -23,7 +23,7 @@ function DashboardIndex() {
   };
 
   return (
-    <Page auth={true}>
+    <Page auth={true} redirect="/login">
       <AppBar position="static" style={{ marginBottom: "15px" }}>
         <Toolbar className={classes.toolbar}>
           <div className={classes.content} variant="h5">

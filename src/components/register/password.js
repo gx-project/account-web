@@ -21,7 +21,6 @@ function PasswordStep() {
         <br />
         Precisa ter no mínimo 6 caracteres.
       </Typography>
-
       <Form
         onSubmit={e => {
           e && e.preventDefault();
@@ -29,7 +28,6 @@ function PasswordStep() {
         }}
       >
         <PasswordInput
-          autoFocus
           margin="normal"
           fullWidth
           id="pw"
