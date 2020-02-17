@@ -10,6 +10,7 @@ class LoginState {
   @observable loading = false;
   @observable step = 0;
   id = "";
+  ref = "";
   code = "";
   password = "";
   @observable user = {
@@ -47,16 +48,18 @@ class LoginState {
     const { ok, data, status } = await auth.credential(this.id, this.password);
 
     if (ok) {
-      const { token } = data;
+      if (data.next === "code") {
+        this.ref = data.id;
+        this.loading = false;
+        this.step = 2;
+        return;
+      }
 
-      await storage.setItem("token", token);
-      await Dashboard.init(token);
-
-      Router.push("/dashboard");
+      await this.authenticated(data.token);
     } else {
       switch (status) {
         case 401:
-          this.error = "Senha incorreta";
+          this.error = "Senha inválida";
           break;
         default:
           this.error = true;
@@ -64,6 +67,24 @@ class LoginState {
     }
 
     this.loading = false;
+  }
+
+  @action async sendCode() {
+    this.loading = true;
+
+    if (!this.verify()) return (this.loading = false);
+
+    const { ok, data, status } = await auth.code(this.ref, this.code);
+
+    if (ok) {
+      await this.authenticated(data.token);
+    } else {
+      this.error = "Código inválido";
+    }
+
+    // this.handleError(data, status)
+
+    return (this.loading = false);
   }
 
   verify() {
@@ -91,6 +112,13 @@ class LoginState {
         break;
     }
     return true;
+  }
+
+  async authenticated(token) {
+    await storage.setItem("token", token);
+    await Dashboard.init(token);
+
+    Router.push("/dashboard");
   }
 }
 

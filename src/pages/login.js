@@ -1,20 +1,17 @@
-import { Component } from "react";
 import Head from "next/head";
-import Router from "next/router";
 import { observer } from "mobx-react";
 import SwipeableViews from "react-swipeable-views";
 
-import { withStyles } from "@material-ui/core/styles";
-import { Container, Typography, Link } from "@material-ui/core";
+import { Container, Typography } from "@material-ui/core";
 
-import { Dashboard, Login } from "../stores";
+import { Login } from "../stores";
 import {
   Page,
-  NumberStep,
   Footer,
+  CodeStep,
   Login as LoginComponents
 } from "../components";
-import { stylesHook, BottomContent } from "../style/login";
+import { stylesHook } from "../style/login";
 
 export default observer(function LoginPage() {
   const { container, flexColumn, flexRow, content } = stylesHook();
@@ -65,6 +62,15 @@ export default observer(function LoginPage() {
                     Login.sendCredential();
                   }}
                   onChange={({ value }) => (Login.password = value)}
+                />
+              </div>
+
+              <div className={`${container} ${flexColumn}`}>
+                <CodeStep
+                  loading={Login.loading}
+                  error={Login.error}
+                  onSubmit={() => Login.sendCode()}
+                  onChange={value => (Login.code = value)}
                 />
               </div>
             </SwipeableViews>

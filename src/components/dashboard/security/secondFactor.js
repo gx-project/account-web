@@ -19,11 +19,11 @@ import { stylesHook } from "../../../style/dashboard";
 export default observer(function AuthSecondFactor() {
   const { formControl } = stylesHook();
 
-  const activated = !!AccountState.data.twoFactors;
+  const activated = !!AccountState.data.authSecondFactor;
 
   const handleChange = function(e, value) {
     AccountState.updateData.authMode = {
-      twoFactors: value
+      authSecondFactor: value
     };
     AccountState.update("authMode");
   };
@@ -43,7 +43,9 @@ export default observer(function AuthSecondFactor() {
               checked={activated}
               onChange={() => {
                 AccountState.updateData.authMode = {
-                  twoFactors: !activated ? AccountState.data.phones[0] : false
+                  authSecondFactor: !activated
+                    ? AccountState.data.phones[0]
+                    : false
                 };
                 AccountState.update("authMode");
               }}
@@ -57,7 +59,7 @@ export default observer(function AuthSecondFactor() {
           <FormLabel component="legend">Destinatário</FormLabel>
           <RadioGroup
             aria-label="Destinatário"
-            value={AccountState.data.twoFactors}
+            value={AccountState.data.authSecondFactor}
             onChange={handleChange}
           >
             {AccountState.data.phones.map((number, idx) => (

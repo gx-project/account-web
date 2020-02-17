@@ -64,33 +64,33 @@ export const account = {
 };
 
 export const auth = {
-  identify(nbr) {
+  request(endpoint, fields, method = "POST") {
     const body = new FormData();
-    body.append("id", nbr);
+
+    for (const field in fields) {
+      body.append(field, fields[field]);
+    }
 
     return middleware(
-      fetch(`${API_ENDPOINT}/auth/identify`, {
-        method: "POST",
+      fetch(`${API_ENDPOINT}/auth/${endpoint}`, {
+        method,
         body
       })
     );
   },
+  identify(id) {
+    return auth.request("identify", { id });
+  },
   credential(id, pw) {
-    const body = new FormData();
-    body.append("id", id);
-    body.append("pw", pw);
-
-    return middleware(
-      fetch(`${API_ENDPOINT}/auth/credential`, {
-        method: "POST",
-        body
-      })
-    );
+    return auth.request("credential", { id, pw });
+  },
+  code(ref, code) {
+    return auth.request("code", { ref, code });
   }
 };
 
 export const register = {
-  request(endpoint, fields) {
+  request(endpoint, fields, method = "POST") {
     const body = new FormData();
 
     for (const field in fields) {
@@ -99,7 +99,7 @@ export const register = {
 
     return middleware(
       fetch(`${API_ENDPOINT}/register/${endpoint}`, {
-        method: "POST",
+        method,
         body
       })
     );

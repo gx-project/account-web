@@ -5,10 +5,17 @@ import SwipeableViews from "react-swipeable-views";
 import { Container, Typography } from "@material-ui/core";
 
 import State from "../stores/register";
-import { Page, NumberStep, PhotoEditor, Register, Footer } from "../components";
+import {
+  Page,
+  NumberStep,
+  PhotoEditor,
+  Register,
+  Footer,
+  CodeStep
+} from "../components";
 import { stylesHook } from "../style/login";
 
-const { Terms, Code, CPF, Profile, Password } = Register;
+const { Terms, CPF, Profile, Password } = Register;
 
 function makeStyle(step) {
   return {
@@ -76,7 +83,16 @@ export default observer(function RegisterPage() {
                       }
                     />
                   </Step>
-                  <Step index={1} children={<Code />} />
+                  <Step index={1}>
+                    <CodeStep
+                      title="Código"
+                      to={State.nbr}
+                      error={State.errors.code}
+                      loading={State.loading}
+                      onChange={value => (State.code = value)}
+                      onSubmit={() => State.sendCode()}
+                    />
+                  </Step>
                   <Step index={2} children={<CPF />} />
                   <Step index={3} children={<Profile />} />
                   <Step index={4} children={<Password />} />

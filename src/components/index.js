@@ -9,6 +9,7 @@ export { default as RichInput } from "./richInput";
 export { default as PasswordInput } from "./passwordInput";
 export { default as LoadingPage } from "./loadingPage";
 export { default as NumberStep } from "./numberStep";
+export { default as CodeStep } from "./code";
 export { default as PhotoEditor } from "./photoEditor";
 
 export { Register, Dashboard, Login, Footer };
