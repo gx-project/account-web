@@ -6,6 +6,10 @@ import { observer } from "mobx-react";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import storage from "localforage";
+import Alert from "@material-ui/lab/Alert";
+import { Snackbar } from "@material-ui/core";
+
+import AppState from "../stores";
 import theme from "../style/theme";
 
 if (typeof window !== "undefined") {
@@ -40,6 +44,19 @@ class GXAccountApp extends App {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Component {...pageProps} />
+          <Snackbar
+            open={AppState.message.open}
+            autoHideDuration={AppState.message.duration}
+            onClose={(e, reason) => AppState.handleCloseMessage(e, reason)}
+          >
+            <Alert
+              onClose={(e, reason) => AppState.handleCloseMessage(e, reason)}
+              severity={AppState.message.type}
+              variant={AppState.message.variant || "filled"}
+            >
+              {AppState.message.content}
+            </Alert>
+          </Snackbar>
         </ThemeProvider>
       </React.Fragment>
     );

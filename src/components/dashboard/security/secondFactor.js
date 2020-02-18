@@ -22,10 +22,13 @@ export default observer(function AuthSecondFactor() {
   const activated = !!AccountState.data.authSecondFactor;
 
   const handleChange = function(e, value) {
-    AccountState.updateData.authMode = {
-      authSecondFactor: value
-    };
-    AccountState.update("authMode");
+    AccountState.setUpdate(
+      "auth",
+      {
+        authSecondFactor: value
+      },
+      true
+    );
   };
 
   return (
@@ -42,12 +45,15 @@ export default observer(function AuthSecondFactor() {
               edge="end"
               checked={activated}
               onChange={() => {
-                AccountState.updateData.authMode = {
-                  authSecondFactor: !activated
-                    ? AccountState.data.phones[0]
-                    : false
-                };
-                AccountState.update("authMode");
+                AccountState.setUpdate(
+                  "auth",
+                  {
+                    authSecondFactor: !activated
+                      ? AccountState.data.phones[0]
+                      : false
+                  },
+                  true
+                );
               }}
               inputProps={{ "aria-labelledby": "switch-auth-two-factors" }}
             />

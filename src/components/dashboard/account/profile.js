@@ -13,7 +13,7 @@ import {
 import { AccountState } from "../../../stores/dashboard";
 
 export default observer(function Profile() {
-  const { data, updateData, errors } = AccountState;
+  const { data, errors } = AccountState;
 
   return (
     <>
@@ -23,7 +23,7 @@ export default observer(function Profile() {
       <form
         onSubmit={e => {
           e.preventDefault();
-          AccountState.update("profile");
+          AccountState.update();
         }}
       >
         <Grid container spacing={2}>
@@ -36,7 +36,8 @@ export default observer(function Profile() {
               label="Nome"
               defaultValue={data.fn}
               onChange={({ target: { value } }) => {
-                updateData.profile.fn = value;
+                AccountState.setUpdate("profile", { fn: value });
+                // updateData.profile.fn = value;
               }}
               inputProps={{
                 style: { textTransform: "capitalize" }
@@ -58,7 +59,8 @@ export default observer(function Profile() {
               autoComplete="lname"
               defaultValue={data.ln}
               onChange={({ target: { value } }) => {
-                updateData.profile.ln = value;
+                AccountState.setUpdate("profile", { ln: value });
+                // updateData.profile.ln = value;
               }}
               inputProps={{
                 style: { textTransform: "capitalize" }

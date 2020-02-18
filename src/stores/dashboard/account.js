@@ -1,17 +1,19 @@
 import { observable, action, toJS } from "mobx";
 import storage from "localforage";
 
+import AppState from "../";
+
 import { STORE_ACCOUNT_KEY } from "../../constants";
 import { regex } from "../../utils";
 import { account } from "../../api";
 
 class DashboardAccount {
   @observable initialized = false;
-  @observable loading = { authMode: false, password: false, profile: false };
+  @observable loading = { auth: false, password: false, profile: false };
   @observable errors = { password: {}, profile: {}, response: false };
   @observable data = {};
 
-  @observable updateData = { password: {}, profile: {} };
+  updateData = {};
 
   @action async hydrate(save) {
     if (save) {
@@ -40,33 +42,47 @@ class DashboardAccount {
     if (!this.initialized) return (this.initialized = true);
   }
 
-  @action async update(action) {
+  setUpdate(action, data, doUpdate) {
+    if (action in this.updateData) {
+      Object.assign(this.updateData[action], data);
+    } else {
+      this.updateData[action] = data;
+    }
+
+    if (doUpdate) this.update();
+  }
+
+  @action async update() {
+    const [action] = Object.keys(this.updateData);
+
+    this.errors[action] = {};
     this.loading[action] = true;
 
     if (!this.validation(action)) return;
 
-    const response = await account.update(action, this.updateData[action]);
+    const { ok, data, status } = await account.update(
+      action,
+      this.updateData[action]
+    );
 
-    if (!response.ok) {
-      this.errors.response = true;
+    if (!ok) {
+      this.handleErrors(action, status, data);
       return (this.loading[action] = false);
     }
 
-    if (`pos_${action}` in this) {
-      await this[`pos_${action}`]();
-    }
+    await this.postUpdate(action);
 
     this.loading[action] = false;
   }
 
-  @action validation(action, content) {
+  @action validation(action) {
     switch (action) {
-      case "passwords":
+      case "password":
         const {
           password: { current, want }
         } = this.updateData;
         if (!current || current.length < 6) {
-          this.errors.passwords.current =
+          this.errors.password.current =
             "Senhas precisam ter no mínimo 6 caracteres";
           return false;
         }
@@ -98,14 +114,22 @@ class DashboardAccount {
     return true;
   }
 
-  async pos_profile() {
-    await this.hydrate(this.updateData.profile);
-    this.updateData.profile = {};
+  async postUpdate(action) {
+    await this.hydrate(this.updateData[action]);
+    this.updateData = {};
   }
 
-  async pos_authMode() {
-    await this.hydrate(this.updateData.authMode);
-    this.updateData.authMode = {};
+  handleErrors(action, status, data) {
+    switch (action) {
+      case "password":
+        if (data.message === "invalid password") {
+          AppState.setMessage({
+            content: "Você errou sua senha atual.",
+            type: "error"
+          });
+        }
+        break;
+    }
   }
 }
 

@@ -18,7 +18,7 @@ export default observer(function Password() {
     <form
       onSubmit={e => {
         e.preventDefault();
-        AccountState.update("password");
+        AccountState.update();
       }}
     >
       <Typography variant="h6" display="block" gutterBottom>
@@ -30,7 +30,7 @@ export default observer(function Password() {
             fullWidth
             label="Senha atual"
             onChange={e => {
-              AccountState.updateData.password.current = e.target.value;
+              AccountState.setUpdate("password", { current: e.target.value });
             }}
             error={!!password.current}
           />
@@ -46,7 +46,7 @@ export default observer(function Password() {
             fullWidth
             label="Nova senha"
             onChange={e => {
-              AccountState.updateData.password.want = e.target.value;
+              AccountState.setUpdate("password", { want: e.target.value });
             }}
             error={!!password.want}
           />

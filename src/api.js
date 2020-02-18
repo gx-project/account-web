@@ -6,7 +6,11 @@ import storage from "localforage";
 
 async function middleware(request) {
   const response = await request;
-  if (response.status === 406) {
+  const data = await response.json();
+  if (
+    response.status === 406 &&
+    (data.message === "invalid token" || data.message === "invalid session")
+  ) {
     await storage.removeItem("token");
     await storage.removeItem("user");
     return Router.replace("/login");
@@ -15,7 +19,8 @@ async function middleware(request) {
   return {
     status: response.status,
     ok: response.ok,
-    data: await response.json()
+    response,
+    data
   };
 }
 
@@ -45,14 +50,13 @@ export const account = {
   },
   update(action, fields) {
     const body = new FormData();
-    body.append("action", action);
 
     for (const field in fields) {
       body.append(field, fields[field]);
     }
 
     return middleware(
-      fetch(`${API_ENDPOINT}/account`, {
+      fetch(`${API_ENDPOINT}/account/${action}`, {
         headers: {
           Authorization: DashboardState.token
         },
