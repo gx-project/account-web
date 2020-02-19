@@ -9,7 +9,7 @@ export default function StepButton({ children, loading, ...props }) {
       type="submit"
       variant="contained"
       disableElevation
-      disabled={loading}
+      // disabled={loading}
       color="primary"
       {...props}
     >

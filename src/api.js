@@ -1,27 +1,42 @@
 import Router from "next/router";
 import { API_ENDPOINT } from "./constants";
-import DashboardState from "./stores/dashboard";
+import App, { Dashboard } from "./stores";
 import fetch from "isomorphic-unfetch";
 import storage from "localforage";
 
 async function middleware(request) {
-  const response = await request;
-  const data = await response.json();
-  if (
-    response.status === 406 &&
-    (data.message === "invalid token" || data.message === "invalid session")
-  ) {
-    await storage.removeItem("token");
-    await storage.removeItem("user");
-    return Router.replace("/login");
-  }
+  try {
+    App.setLoading(true);
+    const response = await request;
+    const data = await response.json();
+    if (
+      response.status === 406 &&
+      (data.message === "invalid token" || data.message === "session not found")
+    ) {
+      await storage.removeItem("token");
+      await storage.removeItem("user");
+      return Router.replace("/login");
+    }
 
-  return {
-    status: response.status,
-    ok: response.ok,
-    response,
-    data
-  };
+    return {
+      error: false,
+      status: response.status,
+      ok: response.ok,
+      response,
+      data
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      error,
+      status: false,
+      ok: false,
+      response: null,
+      data: {}
+    };
+  } finally {
+    App.setLoading(false);
+  }
 }
 
 export const account = {
@@ -29,7 +44,7 @@ export const account = {
     return middleware(
       fetch(`${API_ENDPOINT}/account`, {
         headers: {
-          Authorization: DashboardState.token
+          Authorization: Dashboard.token
         }
       })
     );
@@ -41,7 +56,7 @@ export const account = {
     return middleware(
       fetch(`${API_ENDPOINT}/account/photo`, {
         headers: {
-          Authorization: DashboardState.token
+          Authorization: Dashboard.token
         },
         method: "PUT",
         body
@@ -58,7 +73,7 @@ export const account = {
     return middleware(
       fetch(`${API_ENDPOINT}/account/${action}`, {
         headers: {
-          Authorization: DashboardState.token
+          Authorization: Dashboard.token
         },
         method: "PUT",
         body

@@ -40,7 +40,11 @@ function PasswordStep() {
         <FormControl error style={{ display: error ? "initial" : "none" }}>
           <FormHelperText>{error}</FormHelperText>
         </FormControl>
-        <StepButton loading={State.loading}>confirmar</StepButton>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <StepButton loading={State.loading} style={{ alignSelf: "flex-end" }}>
+            confirmar
+          </StepButton>
+        </div>
       </Form>
     </>
   );

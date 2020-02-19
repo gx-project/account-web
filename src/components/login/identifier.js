@@ -1,6 +1,13 @@
-import { FormControl, FormHelperText } from "@material-ui/core";
+import { Link as RouterLink } from "next/router";
+import {
+  Typography,
+  FormControl,
+  FormHelperText,
+  Button
+} from "@material-ui/core";
 
 import { RichInput, StepButton } from "../";
+import Bottom from "./bottom";
 
 export default function Identifier({ next, error, loading, ...props }) {
   return (
@@ -20,10 +27,21 @@ export default function Identifier({ next, error, loading, ...props }) {
       <div style={{ display: "flex", flexDirection: "column" }}>
         <StepButton
           onClick={next}
-          loading={loading}
           style={{ alignSelf: "flex-end" }}
+          disabled={loading}
         />
       </div>
+      <Bottom>
+        <Typography variant="subtitle2">Não tem conta?</Typography>
+        <Button
+          size="small"
+          color="primary"
+          component={RouterLink}
+          href="/register"
+        >
+          Criar conta
+        </Button>
+      </Bottom>
     </form>
   );
 }

@@ -27,8 +27,10 @@ export const styles = theme => ({
     paddingBottom: theme.spacing(2)
   },
   content: {
-    flexGrow: 1,
-    height: "140px"
+    paddingTop: 70
+  },
+  profile: {
+    paddingBottom: theme.spacing(4)
   },
   avatarContainer: {
     width: "130px",

@@ -1,22 +1,19 @@
 import { observer } from "mobx-react";
+import { Link as RouterLink } from "next/router";
 import {
   Avatar,
-  Link,
+  Button,
   Typography,
   FormControl,
-  FormHelperText
+  Grid,
+  FormHelperText,
+  IconButton
 } from "@material-ui/core";
+import { ArrowBackIos } from "@material-ui/icons";
 
 import LoginState from "../../stores/login";
 import { StepButton, PasswordInput } from "../";
-import { BottomContent } from "../../style/login";
-
-function next(e) {
-  e && e.preventDefault();
-  if (LoginState.password.length > 5) {
-    LoginState.sendCredential();
-  }
-}
+import Bottom from "./bottom";
 
 function NumberStep({ user, next, loading, error }) {
   return (
@@ -50,15 +47,36 @@ function NumberStep({ user, next, loading, error }) {
         <FormControl error style={{ display: error ? "initial" : "none" }}>
           <FormHelperText>{error}</FormHelperText>
         </FormControl>
-        <StepButton onClick={next} loading={loading}>
-          entrar
-        </StepButton>
+        <Grid container>
+          <Grid item xs style={{ display: "flex", alignItems: "center" }}>
+            <IconButton
+              aria-label="voltar"
+              onClick={e => LoginState.setStep(0)}
+            >
+              <ArrowBackIos />
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <StepButton
+              onClick={next}
+              disabled={loading}
+              style={{ alignSelf: "flex-end" }}
+            >
+              entrar
+            </StepButton>
+          </Grid>
+        </Grid>
       </form>
-      <BottomContent>
-        <Link href="#" variant="body2">
+      <Bottom>
+        <Button
+          size="small"
+          color="primary"
+          component={RouterLink}
+          href="/recover"
+        >
           Esqueci minha senha
-        </Link>
-      </BottomContent>
+        </Button>
+      </Bottom>
     </>
   );
 }

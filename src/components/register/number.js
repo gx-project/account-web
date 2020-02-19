@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
 import { FormControl, FormHelperText } from "@material-ui/core";
 
-import { RichInput, StepButton } from "./";
+import { RichInput, StepButton } from "..";
 
 function NumberStep({
   next,
@@ -14,7 +14,7 @@ function NumberStep({
   return (
     <>
       {Top}
-      <form onSubmit={next}>
+      <form onSubmit={next} style={{ width: "100%" }}>
         <RichInput
           autoFocus
           fullWidth
@@ -31,9 +31,14 @@ function NumberStep({
         <FormControl error style={{ display: error ? "initial" : "none" }}>
           <FormHelperText>{error}</FormHelperText>
         </FormControl>
-        <StepButton onClick={next} loading={loading} />
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <StepButton
+            onClick={next}
+            loading={loading}
+            style={{ alignSelf: "flex-end" }}
+          />
+        </div>
       </form>
-      {Bottom}
     </>
   );
 }

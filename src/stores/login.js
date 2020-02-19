@@ -1,6 +1,7 @@
 import { observable, action } from "mobx";
 import storage from "localforage";
 import Router from "next/router";
+import AppState from "./index";
 import Dashboard from "./dashboard";
 
 import { regex } from "../utils";
@@ -24,9 +25,8 @@ class LoginState {
 
   @action async sendId() {
     this.error = false;
-    this.loading = true;
 
-    if (!this.verify()) return (this.loading = false);
+    if (!this.verify()) return;
 
     const { data } = await auth.identify(this.id);
 
@@ -37,12 +37,10 @@ class LoginState {
     } else {
       this.error = "Usuário não encontrado";
     }
-    this.loading = false;
   }
 
   @action async sendCredential() {
-    this.loading = true;
-    if (!this.verify()) return (this.loading = false);
+    if (!this.verify()) return;
 
     const { ok, data, status } = await auth.credential(this.id, this.password);
 
@@ -63,14 +61,10 @@ class LoginState {
           this.error = true;
       }
     }
-
-    this.loading = false;
   }
 
   @action async sendCode() {
-    this.loading = true;
-
-    if (!this.verify()) return (this.loading = false);
+    if (!this.verify()) return;
 
     const { ok, data, status } = await auth.code(this.id, this.code);
 
@@ -79,10 +73,7 @@ class LoginState {
     } else {
       this.error = "Código inválido";
     }
-
     // this.handleError(data, status)
-
-    return (this.loading = false);
   }
 
   verify() {

@@ -49,7 +49,7 @@ class DashboardAccount {
       this.updateData[action] = data;
     }
 
-    if (doUpdate) this.update();
+    if (doUpdate) return this.update();
   }
 
   @action async update() {
@@ -66,11 +66,11 @@ class DashboardAccount {
     );
 
     if (!ok) {
-      this.handleErrors(action, status, data);
+      this.handleErrors({ action, status, data });
       return (this.loading[action] = false);
     }
 
-    await this.postUpdate(action);
+    await this.postUpdate(action, data);
 
     this.loading[action] = false;
   }
@@ -114,21 +114,28 @@ class DashboardAccount {
     return true;
   }
 
-  async postUpdate(action) {
+  async postUpdate(action, data) {
+    if (action === "photo") {
+      await this.hydrate({ photo: data.url });
+      return;
+    }
+
     await this.hydrate(this.updateData[action]);
     this.updateData = {};
   }
 
-  handleErrors(action, status, data) {
-    switch (action) {
-      case "password":
-        if (data.message === "invalid password") {
-          AppState.setMessage({
-            content: "Você errou sua senha atual.",
-            type: "error"
-          });
-        }
-        break;
+  handleErrors({ action, status, data }) {
+    if (action) {
+      switch (action) {
+        case "password":
+          if (data.message === "invalid password") {
+            AppState.setMessage({
+              content: "Você errou sua senha atual.",
+              type: "error"
+            });
+          }
+          break;
+      }
     }
   }
 }

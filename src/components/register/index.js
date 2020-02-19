@@ -1,3 +1,4 @@
+export { default as Number } from "./number";
 export { default as CPF } from "./cpf";
 export { default as Password } from "./password";
 export { default as Profile } from "./profile";

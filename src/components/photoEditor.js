@@ -2,14 +2,22 @@ import { useState, useEffect, useCallback } from "react";
 import { observer } from "mobx-react";
 import { useDropzone } from "react-dropzone";
 import AvatarEditor from "react-avatar-editor";
-import { Typography, Slider } from "@material-ui/core";
+import { Slider } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
 
+import { AccountState } from "../stores/dashboard";
 import State from "../stores/register";
 import { StepButton } from "./";
-import { stylesHook } from "../style/login";
 
-function PictureStep({ onResult, title = true, current, ...props }) {
-  const { container, flexColumn } = stylesHook();
+const PictureStep = withStyles(
+  theme => ({
+    button: {
+      display: "block",
+      margin: `${theme.spacing(2)}px auto`
+    }
+  }),
+  { withTheme: true }
+)(function({ onResult, onSend, current, theme, classes, ...props }) {
   const [changed, setChanged] = useState(false);
   const [file, setFile] = useState(false);
   const [zoom, setZoom] = useState(1);
@@ -31,16 +39,11 @@ function PictureStep({ onResult, title = true, current, ...props }) {
 
   return (
     <div {...props}>
-      {title && (
-        <div className={`${container} ${flexColumn}`}>
-          <Typography style={{ margin: "5% 0" }} component="h1" variant="h5">
-            Foto de perfil
-          </Typography>
-        </div>
-      )}
       <div {...getRootProps()}>
         <input {...getInputProps()} />
-        <StepButton fullWidth={false}>Escolher</StepButton>
+        <StepButton className={classes.button} fullWidth={false}>
+          Escolher
+        </StepButton>
       </div>
       {file && (
         <>
@@ -51,13 +54,19 @@ function PictureStep({ onResult, title = true, current, ...props }) {
             height={230}
             border={0}
             borderRadius={230}
-            color={[238, 238, 238]} // RGBA
+            color={theme.palette.type === "dark" ? [0, 0, 0] : [238, 238, 238]} // RGBA
             scale={zoom}
             rotate={0}
             style={{
               display: "block",
               margin: "0 auto",
-              borderRadius: "50%"
+              borderRadius: "50%",
+              border: "2px solid",
+              borderColor:
+                theme.palette.type === "dark"
+                  ? theme.palette.secondary.main
+                  : theme.palette.grey[100],
+              boxShadow: `0px 0px 100px -30px ${theme.palette.primary.main}`
             }}
           />
           <Slider
@@ -68,16 +77,20 @@ function PictureStep({ onResult, title = true, current, ...props }) {
             max={2}
             step={0.1}
           />
-
           <StepButton
             disabled={!changed}
             fullWidth={false}
+            className={classes.button}
             onClick={() => {
               const el = editor.getImageScaledToCanvas();
-              el.toBlob(async blob => {
+              el.toBlob(async photo => {
+                //onSend && onSend(blob);
+                AccountState.setUpdate("photo", { photo }, true);
+                /*
                 const result = await State.sendPicture(blob);
                 setChanged(false);
                 onResult && onResult(result);
+                */
               });
             }}
             loading={State.loading}
@@ -88,6 +101,6 @@ function PictureStep({ onResult, title = true, current, ...props }) {
       )}
     </div>
   );
-}
+});
 
 export default observer(PictureStep);

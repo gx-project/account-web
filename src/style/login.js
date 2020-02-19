@@ -1,4 +1,3 @@
-import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 
 export const styles = theme => ({
@@ -7,11 +6,13 @@ export const styles = theme => ({
   },
   container: {
     display: "flex",
-    alignItems: "center"
+    alignItems: "center",
+    flexDirection: "column",
+    width: "100%",
+    height: "100%",
+    paddingTop: 70
   },
-  flexColumn: {
-    flexDirection: "column"
-  },
+  flexColumn: {},
   flexRow: {
     flexDirection: "row"
   },
@@ -30,19 +31,3 @@ export const styles = theme => ({
 });
 
 export const stylesHook = makeStyles(styles);
-
-export const BottomContent = ({ children, style }) => {
-  return (
-    <Grid
-      container
-      style={{
-        display: "flex",
-        alignContent: "center",
-        flexDirection: "column",
-        ...style
-      }}
-    >
-      <Grid item>{children}</Grid>
-    </Grid>
-  );
-};

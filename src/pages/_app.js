@@ -33,7 +33,7 @@ class GXAccountApp extends App {
     const { Component, pageProps } = this.props;
 
     return (
-      <React.Fragment>
+      <>
         <Head>
           <title>Conta Guru</title>
           <meta
@@ -52,13 +52,62 @@ class GXAccountApp extends App {
             <Alert
               onClose={(e, reason) => AppState.handleCloseMessage(e, reason)}
               severity={AppState.message.type}
-              variant={AppState.message.variant || "filled"}
+              variant={AppState.message.variant}
             >
               {AppState.message.content}
             </Alert>
           </Snackbar>
+          <div
+            className={`gx-line-container${AppState.loading ? " loading" : ""}`}
+          >
+            <div className="gx-line" />
+          </div>
+          <style jsx>{`
+            .gx-line-container {
+              position: fixed;
+              bottom: 0;
+              left: 0;
+              width: 100%;
+              height: 3px;
+              transition: 0.3s transform;
+              transform: translateY(1px);
+            }
+            .gx-line {
+              width: 200%;
+              height: 3px;
+              background: linear-gradient(
+                90deg,
+                #00fff3,
+                #007eff,
+                #00fff3,
+                #007eff,
+                #00fff3,
+                #007eff
+              );
+              animation: gxline 0.7s ease infinite alternate;
+              animation-play-state: paused;
+            }
+
+            .gx-line-container.loading {
+              transform: translateY(0);
+            }
+
+            .gx-line-container.loading .gx-line {
+              animation-play-state: running;
+              box-shadow: 0 0 5px 2px #0088e9, 0 0 19px 3px #0051e9;
+            }
+
+            @keyframes gxline {
+              from {
+                transform: translateX(0);
+              }
+              to {
+                transform: translateX(-50%);
+              }
+            }
+          `}</style>
         </ThemeProvider>
-      </React.Fragment>
+      </>
     );
   }
 }

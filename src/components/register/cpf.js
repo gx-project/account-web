@@ -45,6 +45,7 @@ function CPFStep() {
           style={{
             marginBottom: "10px"
           }}
+          mask="_"
         />
         <FormControl
           error
@@ -59,6 +60,7 @@ function CPFStep() {
           customInput={TextField}
           error={!!State.errors.birth}
           label="Nascimento"
+          mask="_"
           fullWidth
         />
         <FormControl
@@ -67,7 +69,11 @@ function CPFStep() {
         >
           <FormHelperText>{State.errors.birth}</FormHelperText>
         </FormControl>
-        <StepButton loading={State.loading}>verificar</StepButton>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <StepButton loading={State.loading} style={{ alignSelf: "flex-end" }}>
+            verificar
+          </StepButton>
+        </div>
       </Form>
     </>
   );

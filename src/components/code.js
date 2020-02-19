@@ -66,7 +66,11 @@ function CodeStep({ loading, error, title, to, onSubmit, onChange }) {
         <FormControl error style={{ display: error ? "initial" : "none" }}>
           <FormHelperText>{error}</FormHelperText>
         </FormControl>
-        <StepNextButton loading={loading}>confirmar</StepNextButton>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <StepNextButton loading={loading} style={{ alignSelf: "flex-end" }}>
+            confirmar
+          </StepNextButton>
+        </div>
       </Form>
     </>
   );

@@ -75,7 +75,11 @@ function ProfileStep() {
             </FormControl>
           </Grid>
         </Grid>
-        <StepButton loading={State.loading}>Próximo</StepButton>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <StepButton loading={State.loading} style={{ alignSelf: "flex-end" }}>
+            Próximo
+          </StepButton>
+        </div>
       </Form>
     </>
   );
