@@ -1,6 +1,9 @@
 import { observer } from "mobx-react";
+import Router from "next/router";
 
 import {
+  Avatar,
+  Badge,
   Typography,
   Grid,
   TextField,
@@ -12,7 +15,10 @@ import {
 
 import { AccountState } from "../../../stores/dashboard";
 
+import { stylesHook, EditIcon } from "../../../style/dashboard";
+
 export default observer(function Profile() {
+  const classes = stylesHook();
   const { data, errors } = AccountState;
 
   return (
@@ -27,6 +33,21 @@ export default observer(function Profile() {
         }}
       >
         <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Badge
+              className={classes.avatarContainer}
+              overlap="circle"
+              badgeContent={
+                <EditIcon onClick={() => Router.push("/dashboard/photo")} />
+              }
+            >
+              <Avatar
+                className={classes.avatar}
+                style={{ height: "130px", width: "130px" }}
+                src={AccountState.data.photo}
+              />
+            </Badge>
+          </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               autoComplete="fname"
@@ -37,7 +58,6 @@ export default observer(function Profile() {
               defaultValue={data.fn}
               onChange={({ target: { value } }) => {
                 AccountState.setUpdate("profile", { fn: value });
-                // updateData.profile.fn = value;
               }}
               inputProps={{
                 style: { textTransform: "capitalize" }

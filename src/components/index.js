@@ -4,6 +4,7 @@ import * as Login from "./login";
 import * as Footer from "./footer";
 
 export { default as Page } from "./page";
+export { default as AppBar } from "./appBar";
 export { default as StepButton } from "./stepButton";
 export { default as RichInput } from "./richInput";
 export { default as PasswordInput } from "./passwordInput";

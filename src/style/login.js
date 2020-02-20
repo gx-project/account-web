@@ -9,8 +9,7 @@ export const styles = theme => ({
     alignItems: "center",
     flexDirection: "column",
     width: "100%",
-    height: "100%",
-    paddingTop: 70
+    height: "100%"
   },
   flexColumn: {},
   flexRow: {

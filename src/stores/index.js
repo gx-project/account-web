@@ -7,6 +7,7 @@ export { default as Dashboard } from "./dashboard";
 class AppState {
   @observable loading = false;
   @observable message = {};
+  baseURL = "";
 
   @action setLoading(value) {
     this.loading = value;

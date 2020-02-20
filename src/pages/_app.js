@@ -9,7 +9,8 @@ import storage from "localforage";
 import Alert from "@material-ui/lab/Alert";
 import { Snackbar } from "@material-ui/core";
 
-import AppState from "../stores";
+import AppState, { Dashboard } from "../stores";
+import { AppBar } from "../components/";
 import theme from "../style/theme";
 
 if (typeof window !== "undefined") {
@@ -22,11 +23,28 @@ if (typeof window !== "undefined") {
 
 @observer
 class GXAccountApp extends App {
+  static getInitialProps({ req }) {
+    if (req) {
+      cosnole.log(req.headers);
+      const protocol = req.headers["x-forwarded-proto"];
+      const host = req.headers["x-forwarded-host"] || req.headers.host;
+      AppState.baseURL = `${protocol}://${host}`;
+      return {};
+    }
+
+    if (typeof window !== "undefined")
+      AppState.baseURL = window.location.origin;
+
+    return {};
+  }
+
   async componentDidMount() {
     const jssStyles = document.querySelector("#jss-server-side");
     if (jssStyles) {
       jssStyles.parentElement.removeChild(jssStyles);
     }
+
+    // Dashboard.init();
   }
 
   render() {
@@ -43,7 +61,8 @@ class GXAccountApp extends App {
         </Head>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <Component {...pageProps} />
+          <AppBar />
+          <Component {...pageProps} style={{ paddingTop: 64 }} />
           <Snackbar
             open={AppState.message.open}
             autoHideDuration={AppState.message.duration}

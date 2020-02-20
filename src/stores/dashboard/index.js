@@ -1,6 +1,6 @@
 import Router from "next/router";
 import storage from "localforage";
-import { observable, action } from "mobx";
+import { observable, action, toJS } from "mobx";
 
 import { STORE_TOKEN_KEY } from "../../constants";
 import AccountState from "./account";
@@ -11,9 +11,7 @@ const wait = ts => new Promise(resolve => setTimeout(resolve, ts));
 
 class DashboardState {
   @observable loading = true;
-  token = false;
-  user = false;
-
+  @observable token = false;
   @observable panel = "account";
 
   constructor() {
@@ -29,18 +27,14 @@ class DashboardState {
   }
 
   @action async init(token) {
+    console.log("init", token);
     try {
-      // token =
-
-      // if (!token) return Router.push("/login");
-
       this.token = token || (await storage.getItem(STORE_TOKEN_KEY));
 
       if (this.token) await AccountState.hydrate();
     } catch (e) {
       console.error(e);
     } finally {
-      await wait(300);
       this.loading = false;
     }
   }

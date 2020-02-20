@@ -28,8 +28,9 @@ class LoginState {
 
     if (!this.verify()) return;
 
-    const { data } = await auth.identify(this.id);
+    const { ok, data } = await auth.identify(this.id);
 
+    if (!ok) return;
     if (data.user) {
       this.step = 1;
       this.user = data.user;

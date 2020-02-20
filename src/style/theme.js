@@ -53,7 +53,9 @@ export default createMuiTheme({
       }
     },
     MuiToolbar: {
-      root: {
+      colorPrimary: {
+        backgroundColor: "transparent !important",
+        boxShadow: "none",
         background:
           "linear-gradient(180deg, #00fff3 1px, #0059ff 2px, #000000 8px)"
       }

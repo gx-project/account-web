@@ -24,14 +24,6 @@ export default observer(function RegisterPage() {
       <Head>
         <title>Cadastro | Conta Guru</title>
       </Head>
-      <AppBar>
-        <img
-          src="gx-logo-white.svg"
-          width="30px"
-          height="30px"
-          style={{ margin: "20px auto" }}
-        />
-      </AppBar>
       <Container component="main" maxWidth="sm" className={container}>
         {!State.termsAccept ? (
           <Terms />

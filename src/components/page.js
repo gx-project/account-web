@@ -38,7 +38,7 @@ class PageWrapper extends Component {
     const { children, loader, auth, redirect, classes, ...props } = this.props;
     return render ? (
       <>
-        <div className={classes.root} {...props}>
+        <div className={classes.root} style={{ paddingTop: 64 }} {...props}>
           {children}
           <Box mt={2} className={classes.footer} component="footer">
             <Typography variant="body2" color="textSecondary" align="center">

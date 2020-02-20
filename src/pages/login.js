@@ -22,14 +22,6 @@ export default observer(function LoginPage() {
       <Head>
         <title>Entrar | Conta Guru</title>
       </Head>
-      <AppBar>
-        <img
-          src="gx-logo-white.svg"
-          width="30px"
-          height="30px"
-          style={{ margin: "20px auto" }}
-        />
-      </AppBar>
       <Container component="main" maxWidth="sm" className={container}>
         <Typography style={{ margin: "5% 0" }} component="h1" variant="h5">
           Entrar

@@ -1,4 +1,4 @@
-import { Link as RouterLink } from "next/router";
+import Link from "next/link";
 import {
   Typography,
   FormControl,
@@ -33,14 +33,11 @@ export default function Identifier({ next, error, loading, ...props }) {
       </div>
       <Bottom>
         <Typography variant="subtitle2">Não tem conta?</Typography>
-        <Button
-          size="small"
-          color="primary"
-          component={RouterLink}
-          href="/register"
-        >
-          Criar conta
-        </Button>
+        <Link href="/register">
+          <Button size="small" color="primary">
+            Criar conta
+          </Button>
+        </Link>
       </Bottom>
     </form>
   );
