@@ -1,8 +1,36 @@
 import Router from "next/router";
-import { API_ENDPOINT } from "./constants";
+import { API_ENDPOINT, STORE_TOKEN_KEY, STORE_ACCOUNT_KEY } from "./constants";
 import App, { Dashboard } from "./stores";
 import fetch from "isomorphic-unfetch";
 import storage from "localforage";
+
+function request(
+  endpoint,
+  { body: content, method = "GET", token = false, headers = {} }
+) {
+  let body;
+
+  if (content instanceof Object) {
+    body = new FormData();
+    for (const field in content) {
+      body.append(field, content[field]);
+    }
+  } else {
+    body = content;
+  }
+
+  if (token) {
+    headers.Authorization = Dashboard.token;
+  }
+
+  return middleware(
+    fetch(`${API_ENDPOINT}${endpoint}`, {
+      method,
+      headers,
+      body
+    })
+  );
+}
 
 async function middleware(request) {
   try {
@@ -11,10 +39,11 @@ async function middleware(request) {
     const data = await response.json();
     if (
       response.status === 406 &&
-      (data.message === "invalid token" || data.message === "session not found")
+      (data.message === "invalid token" || data.message === "invalid session")
     ) {
-      await storage.removeItem("token");
-      await storage.removeItem("user");
+      console.log("??");
+      await storage.removeItem(STORE_TOKEN_KEY);
+      await storage.removeItem(STORE_ACCOUNT_KEY);
       return Router.replace("/login");
     }
 
@@ -41,19 +70,14 @@ async function middleware(request) {
 
 export const account = {
   get() {
-    return middleware(
-      fetch(`${API_ENDPOINT}/account`, {
-        headers: {
-          Authorization: Dashboard.token
-        }
-      })
-    );
+    return request("/account", { token: true });
   },
   photo(photo) {
     const body = new FormData();
     body.append("photo", photo, "profile.jpg");
 
-    return middleware(
+    return request("/account/photo", { method: "PUT", body, token: true });
+    /*return middleware(
       fetch(`${API_ENDPOINT}/account/photo`, {
         headers: {
           Authorization: Dashboard.token
@@ -61,9 +85,11 @@ export const account = {
         method: "PUT",
         body
       })
-    );
+    );*/
   },
-  update(action, fields) {
+  update(action, body) {
+    return request(`/account/${action}`, { body, method: "PUT", token: true });
+    /*
     const body = new FormData();
 
     for (const field in fields) {
@@ -78,33 +104,22 @@ export const account = {
         method: "PUT",
         body
       })
-    );
+    );*/
   }
 };
 
 export const auth = {
-  request(endpoint, fields, method = "POST") {
-    const body = new FormData();
-
-    for (const field in fields) {
-      body.append(field, fields[field]);
-    }
-
-    return middleware(
-      fetch(`${API_ENDPOINT}/auth/${endpoint}`, {
-        method,
-        body
-      })
-    );
-  },
   identify(id) {
-    return auth.request("identify", { id });
+    return request("/auth/identify", { method: "POST", body: { id } });
   },
   credential(id, pw) {
-    return auth.request("credential", { id, pw });
+    return request("/auth/credential", { method: "POST", body: { id, pw } });
   },
   code(id, code) {
-    return auth.request("code", { id, code });
+    return request("/auth/code", { method: "POST", body: { id, code } });
+  },
+  unsign() {
+    return request("/auth/unsign", { method: "POST", token: true });
   }
 };
 

@@ -9,12 +9,13 @@ import storage from "localforage";
 import Alert from "@material-ui/lab/Alert";
 import { Snackbar } from "@material-ui/core";
 
-import AppState, { Dashboard } from "../stores";
+import AppState from "../stores";
 import { AppBar } from "../components/";
 import theme from "../style/theme";
 
 if (typeof window !== "undefined") {
   storage.config({
+    driver: storage.INDEXEDDB,
     name: "GuruWebApp",
     version: 1.0,
     storeName: "Account"
@@ -25,7 +26,7 @@ if (typeof window !== "undefined") {
 class GXAccountApp extends App {
   static getInitialProps({ req }) {
     if (req) {
-      cosnole.log(req.headers);
+      console.log(req.headers);
       const protocol = req.headers["x-forwarded-proto"];
       const host = req.headers["x-forwarded-host"] || req.headers.host;
       AppState.baseURL = `${protocol}://${host}`;
@@ -43,8 +44,6 @@ class GXAccountApp extends App {
     if (jssStyles) {
       jssStyles.parentElement.removeChild(jssStyles);
     }
-
-    // Dashboard.init();
   }
 
   render() {
@@ -54,6 +53,7 @@ class GXAccountApp extends App {
       <>
         <Head>
           <title>Conta Guru</title>
+          <meta charset="UTF-8" />
           <meta
             name="viewport"
             content="minimum-scale=1, initial-scale=1, width=device-width"

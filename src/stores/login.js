@@ -4,7 +4,7 @@ import Router from "next/router";
 import AppState from "./index";
 import Dashboard from "./dashboard";
 
-import { regex } from "../utils";
+import { regex, wait } from "../utils";
 import { auth } from "../api";
 
 class LoginState {
@@ -18,6 +18,7 @@ class LoginState {
     photo: ""
   };
   @observable error = false;
+  @observable codeTarget = "";
 
   @action setStep(step) {
     this.step = step;
@@ -49,10 +50,15 @@ class LoginState {
       if (data.next === "code") {
         this.loading = false;
         this.step = 2;
+        this.codeTarget = this.codeTargetIsEqId(data.target)
+          ? this.id
+          : data.target.padStart(11, "*");
         return;
       }
 
       await this.authenticated(data.token);
+      await wait(3000);
+      this.clear();
     } else {
       switch (status) {
         case 401:
@@ -75,6 +81,10 @@ class LoginState {
       this.error = "Código inválido";
     }
     // this.handleError(data, status)
+  }
+
+  codeTargetIsEqId(target) {
+    return this.id.slice(this.id.length - 4, this.id.length) === target;
   }
 
   verify() {
@@ -109,6 +119,19 @@ class LoginState {
     await Dashboard.init(token);
 
     Router.push("/dashboard");
+  }
+
+  @action clear() {
+    this.step = 0;
+    this.id = "";
+    this.code = "";
+    this.password = "";
+    this.error = false;
+    this.codeTarget = "";
+    this.user = {
+      fn: "",
+      photo: ""
+    };
   }
 }
 

@@ -18,8 +18,9 @@ import { stylesHook } from "../../../style/dashboard";
 
 export default observer(function AuthSecondFactor() {
   const { formControl } = stylesHook();
+  const { authSecondFactor, emails, phones, ncode } = AccountState.data;
 
-  const activated = !!AccountState.data.authSecondFactor;
+  const activated = !!authSecondFactor;
 
   const handleChange = function(e, value) {
     AccountState.setUpdate(
@@ -30,6 +31,20 @@ export default observer(function AuthSecondFactor() {
       true
     );
   };
+
+  const contacts = [
+    ...phones.map(phone => ["phone", `+${ncode}${phone}`]),
+    ...emails.map(email => ["email", email])
+  ];
+
+  const switchHandler = () =>
+    AccountState.setUpdate(
+      "auth",
+      {
+        authSecondFactor: !activated ? contacts[0][1] : false
+      },
+      true
+    );
 
   return (
     <>
@@ -44,17 +59,7 @@ export default observer(function AuthSecondFactor() {
             <Switch
               edge="end"
               checked={activated}
-              onChange={() => {
-                AccountState.setUpdate(
-                  "auth",
-                  {
-                    authSecondFactor: !activated
-                      ? AccountState.data.phones[0]
-                      : false
-                  },
-                  true
-                );
-              }}
+              onChange={switchHandler}
               inputProps={{ "aria-labelledby": "switch-auth-two-factors" }}
             />
           </ListItemSecondaryAction>
@@ -65,20 +70,24 @@ export default observer(function AuthSecondFactor() {
           <FormLabel component="legend">Destinatário</FormLabel>
           <RadioGroup
             aria-label="Destinatário"
-            value={AccountState.data.authSecondFactor}
+            value={authSecondFactor}
             onChange={handleChange}
           >
-            {AccountState.data.phones.map((number, idx) => (
+            {contacts.map(([type, value], idx) => (
               <FormControlLabel
                 key={idx}
-                value={number}
+                value={value}
                 control={<Radio />}
                 label={
-                  <NumberFormat
-                    format="(##) #####-####"
-                    displayType="text"
-                    value={number}
-                  />
+                  type === "email" ? (
+                    value
+                  ) : (
+                    <NumberFormat
+                      format="(##) #####-####"
+                      displayType="text"
+                      value={value}
+                    />
+                  )
                 }
               />
             ))}

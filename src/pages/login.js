@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import SwipeableViews from "react-swipeable-views";
 
 import { withTheme } from "@material-ui/core/styles";
-import { AppBar, Container, Typography } from "@material-ui/core";
+import { Container, Typography } from "@material-ui/core";
 
 import App, { Login } from "../stores";
 import { Page, CodeStep, Login as LoginComponents } from "../components";
@@ -56,7 +56,7 @@ export default observer(function LoginPage() {
           </Step>
           <Step>
             <CodeStep
-              loading={App.loading}
+              to={Login.codeTarget}
               error={Login.error}
               onSubmit={() => Login.sendCode()}
               onChange={value => (Login.code = value)}

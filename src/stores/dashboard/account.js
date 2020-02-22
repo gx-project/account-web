@@ -32,9 +32,9 @@ class DashboardAccount {
     if (ok) {
       await storage.setItem(STORE_ACCOUNT_KEY, data);
       this.setup(data);
+    } else {
+      console.error(data);
     }
-
-    this.setup(data);
   }
 
   @action setup(data) {
@@ -54,6 +54,8 @@ class DashboardAccount {
 
   @action async update() {
     const [action] = Object.keys(this.updateData);
+
+    if (!action) return;
 
     this.errors[action] = {};
     this.loading[action] = true;

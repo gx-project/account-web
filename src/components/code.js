@@ -12,9 +12,7 @@ import {
 import StepNextButton from "./stepButton";
 import Form from "./register/form";
 
-function CodeStep({ loading, error, title, to, onSubmit, onChange }) {
-  // const { code: error } = State.errors;
-
+function CodeStep({ error, title, to, onSubmit, onChange }) {
   return (
     <>
       {title && (
@@ -30,18 +28,7 @@ function CodeStep({ loading, error, title, to, onSubmit, onChange }) {
         >
           {"Enviamos um código para: "}
           <br />
-          {isValidEmail(to) ? (
-            to
-          ) : (
-            <NumberFormat
-              displayType="text"
-              isNumericString
-              format="(##) #####-####"
-              value={to}
-              // value={State.nbr}
-              style={{ fontSize: "1.3rem" }}
-            />
-          )}
+          {to}
         </Typography>
       )}
       <Form
@@ -67,7 +54,7 @@ function CodeStep({ loading, error, title, to, onSubmit, onChange }) {
           <FormHelperText>{error}</FormHelperText>
         </FormControl>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <StepNextButton loading={loading} style={{ alignSelf: "flex-end" }}>
+          <StepNextButton style={{ alignSelf: "flex-end" }}>
             confirmar
           </StepNextButton>
         </div>

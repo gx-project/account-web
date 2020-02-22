@@ -2,10 +2,8 @@ import { Container } from "@material-ui/core";
 
 import AppState from "../../stores";
 import { Page, PhotoEditor } from "../../components";
-import { stylesHook } from "../../style/dashboard";
 
 export default function Photo() {
-  const classes = stylesHook();
   return (
     <Page auth={true} redirect="/login">
       <Container maxWidth="md">

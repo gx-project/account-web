@@ -7,29 +7,26 @@ import { Box, Typography, Link } from "@material-ui/core";
 import DashboardState from "../stores/dashboard";
 import LoadingPage from "../components/loadingPage";
 
-@observer
 class PageWrapper extends Component {
   state = {
     render: false
   };
 
-  async initDashboardStore() {
-    if (DashboardState.loading) {
+  async componentDidMount() {
+    if (!DashboardState.initialized) {
       await DashboardState.init();
     }
-  }
 
-  async componentDidMount() {
-    await this.initDashboardStore();
-
-    if (this.props.auth && !DashboardState.token) {
-      return Router.push(this.props.redirect || "/");
+    switch (this.props.auth) {
+      case true:
+        if (!DashboardState.token)
+          return Router.push(this.props.redirect || "/");
+        break;
+      case false:
+        if (DashboardState.token)
+          return Router.push(this.props.redirect || "/");
+        break;
     }
-
-    if (this.props.auth === false && DashboardState.token) {
-      return Router.push(this.props.redirect || "/");
-    }
-
     this.setState({ render: true });
   }
 

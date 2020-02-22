@@ -23,14 +23,20 @@ export default withTheme(
     const showBackButton =
       router.route === "/dashboard/history" ||
       router.route === "/dashboard/photo";
-    console.log(router.route);
+
+    function logout(e) {
+      e.preventDefault();
+
+      Dashboard.logout();
+    }
+
     return (
       <AppBar>
         <Container maxWidth="sm" disableGutters>
           <Toolbar>
             {showBackButton && (
               <IconButton
-                aria-label="encerrar sessão"
+                aria-label="voltar"
                 onClick={e => window.history.back()}
               >
                 <ArrowBackIosIcon />
@@ -60,7 +66,11 @@ export default withTheme(
                 <IconButton color="inherit" aria-label="abrir notificações">
                   <NotificationsIcon />
                 </IconButton>
-                <IconButton color="inherit" aria-label="encerrar sessão">
+                <IconButton
+                  color="inherit"
+                  aria-label="encerrar sessão"
+                  onClick={logout}
+                >
                   <ExitToAppIcon />
                 </IconButton>
               </>

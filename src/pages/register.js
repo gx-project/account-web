@@ -2,8 +2,8 @@ import { observer } from "mobx-react";
 import Head from "next/head";
 import Router from "next/router";
 import SwipeableViews from "react-swipeable-views";
-import { AppBar, Container, Typography } from "@material-ui/core";
-
+import NumberFormat from "react-number-format";
+import { Container, Typography } from "@material-ui/core";
 import State from "../stores/register";
 import { Page, PhotoEditor, Register, CodeStep } from "../components";
 import { stylesHook } from "../style/login";
@@ -56,9 +56,17 @@ export default observer(function RegisterPage() {
             <Step index={1}>
               <CodeStep
                 title="Código"
-                to={State.nbr}
+                to={
+                  <NumberFormat
+                    displayType="text"
+                    isNumericString
+                    format="(##) #####-####"
+                    value={State.nbr}
+                    // value={State.nbr}
+                    style={{ fontSize: "1.3rem" }}
+                  />
+                }
                 error={State.errors.code}
-                loading={State.loading}
                 onChange={value => (State.code = value)}
                 onSubmit={() => State.sendCode()}
               />
