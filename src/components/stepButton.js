@@ -1,7 +1,7 @@
 import { CircularProgress, Button } from "@material-ui/core";
 import { stylesHook } from "../style/login";
 
-export default function StepButton({ children, loading, ...props }) {
+function StepButton({ children, loading, ...props }) {
   const { button } = stylesHook();
   return (
     <Button
@@ -25,3 +25,5 @@ export default function StepButton({ children, loading, ...props }) {
     </Button>
   );
 }
+
+export default StepButton;

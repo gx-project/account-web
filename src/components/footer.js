@@ -1,6 +1,6 @@
 import { Box, Typography, Link } from "@material-ui/core";
 
-export const Small = props => {
+export function Small(props) {
   return (
     <Box mt={2} {...props}>
       <Typography variant="body2" color="textSecondary" align="center">
@@ -12,4 +12,4 @@ export const Small = props => {
       </Typography>
     </Box>
   );
-};
+}

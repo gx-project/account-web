@@ -1,7 +1,7 @@
 import NumberFormat from "react-number-format";
 import { TextField, InputAdornment } from "@material-ui/core";
 
-export default function RichInput({ onChange, prefix, format, ...props }) {
+function RichInput({ onChange, prefix, format, ...props }) {
   if (!format) {
     return (
       <TextField
@@ -44,3 +44,5 @@ export default function RichInput({ onChange, prefix, format, ...props }) {
     />
   );
 }
+
+export default RichInput;

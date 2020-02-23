@@ -1,7 +1,7 @@
 import Code from "../code";
 import State from "../../stores/login";
 
-export default function CodeStep() {
+function CodeStep() {
   return (
     <Code
       onChange={value => (State.code = value)}
@@ -9,3 +9,5 @@ export default function CodeStep() {
     />
   );
 }
+
+export default CodeStep;

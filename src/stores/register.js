@@ -1,5 +1,5 @@
 import { observable, action } from "mobx";
-import storage from "localforage";
+import AppState from ".";
 import Dashboard, { AccountState } from "./dashboard";
 
 import { isValidCPF } from "@brazilian-utils/brazilian-utils";
@@ -9,7 +9,6 @@ import { register, auth, account } from "../api";
 
 class RegisterState {
   @observable errors = {};
-  @observable loading = false;
   @observable termsAccept = false;
   @observable step = 0;
   nbr = "";
@@ -22,8 +21,22 @@ class RegisterState {
     ln: ""
   };
   pw = "";
-  token = false;
-  @observable error = false;
+
+  @action clear() {
+    this.errors = {};
+    this.termsAccept = false;
+    this.step = 0;
+    this.nbr = "";
+    this.code = "";
+    this.cpf = "";
+    this.birth = "";
+    this.pw = "";
+    this.names = {
+      username: "",
+      fn: "",
+      ln: ""
+    };
+  }
 
   @action setError(error) {
     this.error = error;
@@ -140,7 +153,6 @@ class RegisterState {
   @action async requestCode() {
     if (!this.checkPhone()) return;
 
-    this.loading = true;
     const { ok, data } = await register.phone(this.nbr);
 
     if (ok) {
@@ -153,15 +165,12 @@ class RegisterState {
           this.next();
       }
     }
-
-    this.loading = false;
   }
 
   @action async sendCode() {
     if (this.code.length !== 5) return;
 
     this.errors.code = false;
-    this.loading = true;
 
     const { ok, data } = await register.code(this.nbr, this.code);
 
@@ -173,18 +182,16 @@ class RegisterState {
           this.errors.code = "Código inválido";
           break;
         default:
-          // alert with modal
-          this.error = true;
+          AppState.setMessage({
+            content: "Ocorreu algum problema interno, tente novamente.",
+            type: "error"
+          });
       }
     }
-
-    this.loading = false;
   }
 
   @action async sendCPF() {
     if (!this.checkCPF() || !this.checkBirth()) return;
-
-    this.loading = true;
 
     const { ok, data } = await register.cpf(
       this.nbr,
@@ -193,26 +200,26 @@ class RegisterState {
       this.birth
     );
 
-    if (ok && data.message === "ok") {
-      this.next();
-    } else {
+    if (ok) {
       switch (data.message) {
-        case "in use":
-          this.error = "CPF já cadastrado";
+        case "ok":
+          this.next();
           break;
-        default:
-          this.error = true;
+        case "in use":
+          this.errors.cpf = "CPF já cadastrado";
+          break;
       }
+    } else {
+      AppState.setMessage({
+        content: "Aconteceu algum erro interno, tente novamente.",
+        type: "error"
+      });
     }
-
-    this.loading = false;
   }
 
   @action async sendNames() {
     if (!this.checkUsername() || !this.checkName("fn") || !this.checkName("ln"))
       return;
-
-    this.loading = true;
 
     const { ok, data } = await register.request("names", this.names);
 
@@ -227,13 +234,10 @@ class RegisterState {
           this.error = true;
       }
     }
-
-    this.loading = false;
   }
 
   @action async finish() {
     if (!this.checkPassword()) return;
-    this.loading = true;
 
     const { data } = await register.request("finish", {
       ncode: "55",
@@ -253,8 +257,6 @@ class RegisterState {
         this.next();
         break;
     }
-
-    this.loading = false;
   }
 
   async login() {
@@ -263,7 +265,7 @@ class RegisterState {
     if (ok) {
       const { token } = data;
 
-      await storage.setItem("token", token);
+      await AppState.storage.setItem("token", token);
       Dashboard.init(token);
       return true;
     }
@@ -272,16 +274,12 @@ class RegisterState {
   }
 
   async sendPicture(blob) {
-    if (this.loading) return;
-    this.loading = true;
-
     const { ok, data } = await account.photo(blob);
 
     if (ok) {
       AccountState.hydrate({ photo: data.url });
     }
 
-    this.loading = false;
     return ok;
   }
 }

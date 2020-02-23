@@ -1,10 +1,7 @@
 import { Typography, ExpansionPanelDetails } from "@material-ui/core";
-import { stylesHook } from "../../style/dashboard";
 import CreatePanel from "./createPanel";
 
-export default function AccountPanel(props) {
-  const classes = stylesHook();
-
+function AccountPanel(props) {
   return (
     <CreatePanel title="Pagamento" id="payment-panel-head" {...props}>
       <ExpansionPanelDetails>
@@ -16,3 +13,5 @@ export default function AccountPanel(props) {
     </CreatePanel>
   );
 }
+
+export default AccountPanel;

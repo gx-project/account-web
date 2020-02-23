@@ -1,8 +1,8 @@
 import { observer } from "mobx-react";
+import { withTheme } from "@material-ui/core/styles";
 import {
   Typography,
   Grid,
-  ExpansionPanelActions,
   Button,
   FormControl,
   FormHelperText
@@ -11,59 +11,75 @@ import {
 import { AccountState } from "../../../stores/dashboard";
 import PasswordInput from "../../passwordInput";
 
-export default observer(function Password() {
+function Password({ theme }) {
   const { password } = AccountState.errors;
 
   return (
-    <form
-      onSubmit={e => {
-        e.preventDefault();
-        AccountState.update();
-      }}
-    >
+    <>
       <Typography variant="h6" display="block" gutterBottom>
         Alterar senha
       </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <PasswordInput
-            fullWidth
-            label="Senha atual"
-            onChange={e => {
-              AccountState.setUpdate("password", { current: e.target.value });
-            }}
-            error={!!password.current}
-          />
-          <FormControl
-            error
-            style={{ display: password.current ? "initial" : "none" }}
-          >
-            <FormHelperText>{password.current}</FormHelperText>
-          </FormControl>
+      <form
+        onSubmit={e => {
+          e.preventDefault();
+          AccountState.update();
+        }}
+      >
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <PasswordInput
+              fullWidth
+              label="Senha atual"
+              onChange={e => {
+                AccountState.setUpdate("password", { current: e.target.value });
+              }}
+              error={!!password.current}
+            />
+            <FormControl
+              error
+              style={{ display: password.current ? "initial" : "none" }}
+            >
+              <FormHelperText>{password.current}</FormHelperText>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <PasswordInput
+              fullWidth
+              label="Nova senha"
+              onChange={e => {
+                AccountState.setUpdate("password", { want: e.target.value });
+              }}
+              error={!!password.want}
+            />
+            <FormControl
+              error
+              style={{ display: password.want ? "initial" : "none" }}
+            >
+              <FormHelperText>{password.want}</FormHelperText>
+            </FormControl>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <PasswordInput
-            fullWidth
-            label="Nova senha"
-            onChange={e => {
-              AccountState.setUpdate("password", { want: e.target.value });
-            }}
-            error={!!password.want}
-          />
-          <FormControl
-            error
-            style={{ display: password.want ? "initial" : "none" }}
-          >
-            <FormHelperText>{password.want}</FormHelperText>
-          </FormControl>
-        </Grid>
-      </Grid>
 
-      <ExpansionPanelActions>
-        <Button variant="contained" size="small" color="primary" type="submit">
-          Alterar
-        </Button>
-      </ExpansionPanelActions>
-    </form>
+        <div
+          style={{
+            display: "flex",
+            padding: theme.spacing(2, 0),
+            flexDirection: "column"
+          }}
+        >
+          <Button
+            variant="contained"
+            size="small"
+            color="primary"
+            type="submit"
+            style={{ alignSelf: "flex-end" }}
+          >
+            Alterar
+          </Button>
+        </div>
+      </form>
+    </>
   );
-});
+}
+
+export default withTheme(observer(Password));

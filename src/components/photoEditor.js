@@ -9,15 +9,7 @@ import { AccountState } from "../stores/dashboard";
 import State from "../stores/register";
 import { StepButton } from "./";
 
-const PictureStep = withStyles(
-  theme => ({
-    button: {
-      display: "block",
-      margin: `${theme.spacing(2)}px auto`
-    }
-  }),
-  { withTheme: true }
-)(function({ onResult, onSend, current, theme, classes, ...props }) {
+function PictureStep({ onResult, onSend, current, theme, classes, ...props }) {
   const [changed, setChanged] = useState(false);
   const [file, setFile] = useState(false);
   const [zoom, setZoom] = useState(1);
@@ -84,13 +76,13 @@ const PictureStep = withStyles(
             onClick={() => {
               const el = editor.getImageScaledToCanvas();
               el.toBlob(async photo => {
-                //onSend && onSend(blob);
-                AccountState.setUpdate("photo", { photo }, true);
-                /*
-                const result = await State.sendPicture(blob);
                 setChanged(false);
+                const result = await AccountState.setUpdate(
+                  "photo",
+                  { photo },
+                  true
+                );
                 onResult && onResult(result);
-                */
               });
             }}
             loading={State.loading}
@@ -101,6 +93,14 @@ const PictureStep = withStyles(
       )}
     </div>
   );
-});
+}
 
-export default observer(PictureStep);
+export default withStyles(
+  theme => ({
+    button: {
+      display: "block",
+      margin: `${theme.spacing(2)}px auto`
+    }
+  }),
+  { withTheme: true }
+)(observer(PictureStep));

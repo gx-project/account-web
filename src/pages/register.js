@@ -1,9 +1,11 @@
+import { useEffect } from "react";
 import { observer } from "mobx-react";
 import Head from "next/head";
 import Router from "next/router";
 import SwipeableViews from "react-swipeable-views";
 import NumberFormat from "react-number-format";
 import { Container, Typography } from "@material-ui/core";
+import { withTheme } from "@material-ui/core/styles";
 import State from "../stores/register";
 import { Page, PhotoEditor, Register, CodeStep } from "../components";
 import { stylesHook } from "../style/login";
@@ -16,8 +18,10 @@ function Step({ children }) {
   return <div className={container}>{children}</div>;
 }
 
-export default observer(function RegisterPage() {
+function RegisterPage({ theme }) {
   const { container } = stylesHook();
+
+  useEffect(() => () => State.clear(), []);
 
   return (
     <Page auth={false} redirect="/dashboard">
@@ -33,10 +37,9 @@ export default observer(function RegisterPage() {
             disabled={true}
             style={{ width: "100%" }}
           >
-            <Step index={0}>
+            <Step>
               <Number
                 error={State.errors.number}
-                loading={State.loading}
                 onChange={({ value }) => State.setNumber(value)}
                 next={e => {
                   e.preventDefault && e.preventDefault();
@@ -44,7 +47,10 @@ export default observer(function RegisterPage() {
                 }}
                 Top={
                   <Typography
-                    style={{ margin: "5% 0", textAlign: "center" }}
+                    style={{
+                      margin: theme.spacing(2, 0),
+                      textAlign: "center"
+                    }}
                     component="h1"
                     variant="h5"
                   >
@@ -53,7 +59,7 @@ export default observer(function RegisterPage() {
                 }
               />
             </Step>
-            <Step index={1}>
+            <Step>
               <CodeStep
                 title="Código"
                 to={
@@ -71,13 +77,22 @@ export default observer(function RegisterPage() {
                 onSubmit={() => State.sendCode()}
               />
             </Step>
-            <Step index={2} children={<CPF />} />
-            <Step index={3} children={<Profile />} />
-            <Step index={4} children={<Password />} />
-            <Step index={5}>
+            <Step children={<CPF />} />
+            <Step children={<Profile />} />
+            <Step children={<Password />} />
+            <Step>
+              <Typography
+                style={{ margin: theme.spacing(2, 0), textAlign: "center" }}
+                component="h1"
+                variant="h5"
+              >
+                Escolha uma foto de perfil
+              </Typography>
               <PhotoEditor
                 onResult={result => {
-                  result && Router.push("/obrigado");
+                  if (result) {
+                    Router.push("/obrigado");
+                  }
                 }}
               />
             </Step>
@@ -86,4 +101,6 @@ export default observer(function RegisterPage() {
       </Container>
     </Page>
   );
-});
+}
+
+export default withTheme(observer(RegisterPage));

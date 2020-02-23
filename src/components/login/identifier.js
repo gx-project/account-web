@@ -9,7 +9,7 @@ import {
 import { RichInput, StepButton } from "../";
 import Bottom from "./bottom";
 
-export default function Identifier({ next, error, loading, ...props }) {
+function Identifier({ next, error, loading, ...props }) {
   return (
     <form onSubmit={next} style={{ width: "100%" }}>
       <RichInput
@@ -42,3 +42,5 @@ export default function Identifier({ next, error, loading, ...props }) {
     </form>
   );
 }
+
+export default Identifier;

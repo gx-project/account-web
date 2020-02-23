@@ -41,10 +41,11 @@ async function middleware(request) {
       response.status === 406 &&
       (data.message === "invalid token" || data.message === "invalid session")
     ) {
-      console.log("??");
-      await storage.removeItem(STORE_TOKEN_KEY);
-      await storage.removeItem(STORE_ACCOUNT_KEY);
-      return Router.replace("/login");
+      await App.storage.removeItem(STORE_TOKEN_KEY);
+      await App.storage.removeItem(STORE_ACCOUNT_KEY);
+
+      Router.push("/login");
+      return { ok: false, data: {} };
     }
 
     return {
@@ -56,6 +57,12 @@ async function middleware(request) {
     };
   } catch (error) {
     console.error(error);
+
+    App.setMessage({
+      content: "Aconteceu algum problema, tente novamente.",
+      type: "error"
+    });
+
     return {
       error,
       status: false,
@@ -77,34 +84,9 @@ export const account = {
     body.append("photo", photo, "profile.jpg");
 
     return request("/account/photo", { method: "PUT", body, token: true });
-    /*return middleware(
-      fetch(`${API_ENDPOINT}/account/photo`, {
-        headers: {
-          Authorization: Dashboard.token
-        },
-        method: "PUT",
-        body
-      })
-    );*/
   },
-  update(action, body) {
-    return request(`/account/${action}`, { body, method: "PUT", token: true });
-    /*
-    const body = new FormData();
-
-    for (const field in fields) {
-      body.append(field, fields[field]);
-    }
-
-    return middleware(
-      fetch(`${API_ENDPOINT}/account/${action}`, {
-        headers: {
-          Authorization: Dashboard.token
-        },
-        method: "PUT",
-        body
-      })
-    );*/
+  update(action, body, method = "PUT") {
+    return request(`/account/${action}`, { body, method, token: true });
   }
 };
 

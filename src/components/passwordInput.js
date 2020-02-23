@@ -2,7 +2,7 @@ import { useState } from "react";
 import { TextField, InputAdornment, IconButton } from "@material-ui/core";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 
-export default function PasswordInput(props) {
+function PasswordInput(props) {
   const [showPw, setPwVisibility] = useState(false);
 
   return (
@@ -27,3 +27,4 @@ export default function PasswordInput(props) {
     />
   );
 }
+export default PasswordInput;

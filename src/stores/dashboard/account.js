@@ -1,8 +1,7 @@
 import { observable, action, toJS } from "mobx";
-import storage from "localforage";
+import { isValidEmail } from "@brazilian-utils/brazilian-utils";
 
-import AppState from "../";
-
+import App from "../";
 import { STORE_ACCOUNT_KEY } from "../../constants";
 import { regex } from "../../utils";
 import { account } from "../../api";
@@ -16,13 +15,14 @@ class DashboardAccount {
   updateData = {};
 
   @action async hydrate(save) {
+    console.log("save", save);
     if (save) {
       this.data = { ...this.data, ...save };
-      await storage.setItem(STORE_ACCOUNT_KEY, toJS(this.data));
+      await App.storage.setItem(STORE_ACCOUNT_KEY, toJS(this.data));
       return;
     }
 
-    const cache = await storage.getItem(STORE_ACCOUNT_KEY);
+    const cache = await App.storage.getItem(STORE_ACCOUNT_KEY);
 
     if (cache) {
       return this.setup(cache);
@@ -30,7 +30,7 @@ class DashboardAccount {
 
     const { ok, data } = await account.get();
     if (ok) {
-      await storage.setItem(STORE_ACCOUNT_KEY, data);
+      await App.storage.setItem(STORE_ACCOUNT_KEY, data);
       this.setup(data);
     } else {
       console.error(data);
@@ -58,7 +58,6 @@ class DashboardAccount {
     if (!action) return;
 
     this.errors[action] = {};
-    this.loading[action] = true;
 
     if (!this.validation(action)) return;
 
@@ -69,12 +68,11 @@ class DashboardAccount {
 
     if (!ok) {
       this.handleErrors({ action, status, data });
-      return (this.loading[action] = false);
+      return false;
     }
 
     await this.postUpdate(action, data);
-
-    this.loading[action] = false;
+    return true;
   }
 
   @action validation(action) {
@@ -117,12 +115,36 @@ class DashboardAccount {
   }
 
   async postUpdate(action, data) {
-    if (action === "photo") {
-      await this.hydrate({ photo: data.url });
-      return;
+    switch (action) {
+      case "photo":
+        await this.hydrate({ photo: data.url });
+        break;
+      case "contact":
+        const { add, remove } = this.updateData.contact;
+        if (add) {
+          const field = isValidEmail(add) ? "emails" : "phones";
+          const current = [...this.data[field]];
+
+          current.push(add);
+
+          await this.hydrate({ [field]: current });
+        }
+
+        if (remove) {
+          const field = isValidEmail(remove) ? "emails" : "phones";
+          const current = [...this.data[field]];
+
+          const index = current.indexOf(remove);
+
+          current.splice(index, 1);
+
+          await this.hydrate({ [field]: current });
+        }
+        break;
+      default:
+        await this.hydrate(this.updateData[action]);
     }
 
-    await this.hydrate(this.updateData[action]);
     this.updateData = {};
   }
 
@@ -131,7 +153,7 @@ class DashboardAccount {
       switch (action) {
         case "password":
           if (data.message === "invalid password") {
-            AppState.setMessage({
+            App.setMessage({
               content: "Você errou sua senha atual.",
               type: "error"
             });

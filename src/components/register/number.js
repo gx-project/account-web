@@ -3,14 +3,7 @@ import { FormControl, FormHelperText } from "@material-ui/core";
 
 import { RichInput, StepButton } from "..";
 
-function NumberStep({
-  next,
-  error,
-  loading,
-  Top = null,
-  Bottom = null,
-  ...props
-}) {
+function NumberStep({ next, error, Top = null, Bottom = null, ...props }) {
   return (
     <>
       {Top}
@@ -32,11 +25,7 @@ function NumberStep({
           <FormHelperText>{error}</FormHelperText>
         </FormControl>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <StepButton
-            onClick={next}
-            loading={loading}
-            style={{ alignSelf: "flex-end" }}
-          />
+          <StepButton style={{ alignSelf: "flex-end" }} />
         </div>
       </form>
     </>

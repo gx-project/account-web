@@ -1,5 +1,4 @@
 import { Component } from "react";
-import { observer } from "mobx-react";
 import Router from "next/router";
 import { withStyles } from "@material-ui/core/styles";
 import { Box, Typography, Link } from "@material-ui/core";

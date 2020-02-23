@@ -1,7 +1,7 @@
 import Grid from "@material-ui/core/Grid";
 import { withTheme } from "@material-ui/core/styles";
 
-export default withTheme(({ children, style, theme }) => {
+function LoginBottom({ children, style, theme }) {
   return (
     <Grid
       container
@@ -16,4 +16,6 @@ export default withTheme(({ children, style, theme }) => {
       <Grid item>{children}</Grid>
     </Grid>
   );
-});
+}
+
+export default withTheme(LoginBottom);

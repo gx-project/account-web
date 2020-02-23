@@ -15,7 +15,7 @@ const Step = withTheme(function({ theme, ...props }) {
   return <div className={`${container} ${flexColumn}`} {...props} />;
 });
 
-export default observer(function LoginPage() {
+function LoginPage() {
   const { container } = stylesHook();
   return (
     <Page auth={false} redirect="/dashboard">
@@ -66,4 +66,6 @@ export default observer(function LoginPage() {
       </Container>
     </Page>
   );
-});
+}
+
+export default observer(LoginPage);

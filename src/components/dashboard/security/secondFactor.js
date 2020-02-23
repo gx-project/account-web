@@ -10,13 +10,14 @@ import {
   RadioGroup,
   FormControlLabel,
   FormControl,
-  FormLabel
+  FormLabel,
+  Typography
 } from "@material-ui/core";
 
 import { AccountState } from "../../../stores/dashboard";
 import { stylesHook } from "../../../style/dashboard";
 
-export default observer(function AuthSecondFactor() {
+function AuthSecondFactor() {
   const { formControl } = stylesHook();
   const { authSecondFactor, emails, phones, ncode } = AccountState.data;
 
@@ -48,6 +49,9 @@ export default observer(function AuthSecondFactor() {
 
   return (
     <>
+      <Typography variant="h6" display="block" gutterBottom>
+        Autenticação
+      </Typography>
       <List>
         <ListItem>
           <ListItemText
@@ -96,4 +100,6 @@ export default observer(function AuthSecondFactor() {
       )}
     </>
   );
-});
+}
+
+export default observer(AuthSecondFactor);

@@ -13,7 +13,7 @@ import {
 
 import { AccountState } from "../../../stores/dashboard";
 
-export default observer(function Contact() {
+function Contact() {
   const { data } = AccountState;
 
   const emails = data.emails || [];
@@ -22,11 +22,12 @@ export default observer(function Contact() {
     ...data.phones.map(phone => ["phone", phone]),
     ...emails.map(email => ["email", email])
   ];
-  <NumberFormat
-    format="###.###.###-##"
-    displayType="text"
-    value={AccountState.data.cpf}
-  />;
+
+  const removeContactHandler = async (e, type, remove) => {
+    e.preventDefault();
+    await AccountState.setUpdate("contact", { remove }, true);
+  };
+
   return (
     <>
       <Typography variant="h6" display="block" gutterBottom>
@@ -35,7 +36,6 @@ export default observer(function Contact() {
       <List>
         {list.map(([type, value], idx) => {
           const labelId = `contact-list-label-${value}`;
-
           return (
             <ListItem
               key={idx}
@@ -71,7 +71,11 @@ export default observer(function Contact() {
                   </Tooltip>
                 ) : (
                   list.length > 1 && (
-                    <IconButton edge="end" aria-label={`remover ${value}`}>
+                    <IconButton
+                      edge="end"
+                      aria-label={`remover ${value}`}
+                      onClick={e => removeContactHandler(e, type, value)}
+                    >
                       <DeleteIcon />
                     </IconButton>
                   )
@@ -83,4 +87,6 @@ export default observer(function Contact() {
       </List>
     </>
   );
-});
+}
+
+export default observer(Contact);

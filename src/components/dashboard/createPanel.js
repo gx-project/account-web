@@ -7,12 +7,7 @@ import {
 
 import { stylesHook } from "../../style/dashboard";
 
-export default function createDashboardPanel({
-  id,
-  title,
-  children,
-  ...props
-}) {
+function createDashboardPanel({ id, title, children, ...props }) {
   const { heading } = stylesHook();
 
   return (
@@ -24,3 +19,5 @@ export default function createDashboardPanel({
     </ExpansionPanel>
   );
 }
+
+export default createDashboardPanel;

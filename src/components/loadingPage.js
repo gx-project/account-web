@@ -7,7 +7,7 @@ const style = {
   flexDirection: "column"
 };
 
-export default function Loading() {
+function Loading() {
   return (
     <div style={style}>
       <div
@@ -21,3 +21,5 @@ export default function Loading() {
     </div>
   );
 }
+
+export default Loading;

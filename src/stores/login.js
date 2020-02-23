@@ -1,7 +1,6 @@
 import { observable, action } from "mobx";
-import storage from "localforage";
 import Router from "next/router";
-import AppState from "./index";
+import App from "./index";
 import Dashboard from "./dashboard";
 
 import { regex, wait } from "../utils";
@@ -80,7 +79,6 @@ class LoginState {
     } else {
       this.error = "Código inválido";
     }
-    // this.handleError(data, status)
   }
 
   codeTargetIsEqId(target) {
@@ -115,7 +113,7 @@ class LoginState {
   }
 
   async authenticated(token) {
-    await storage.setItem("token", token);
+    await App.storage.setItem("token", token);
     await Dashboard.init(token);
 
     Router.push("/dashboard");

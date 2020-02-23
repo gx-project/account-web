@@ -2,6 +2,7 @@ import "../style/base.css";
 import React from "react";
 import App from "next/app";
 import Head from "next/head";
+import Router from "next/router";
 import { observer } from "mobx-react";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -11,22 +12,17 @@ import { Snackbar } from "@material-ui/core";
 
 import AppState from "../stores";
 import { AppBar } from "../components/";
-import theme from "../style/theme";
+import { dark, light } from "../style/theme";
 
-if (typeof window !== "undefined") {
-  storage.config({
-    driver: storage.INDEXEDDB,
-    name: "GuruWebApp",
-    version: 1.0,
-    storeName: "Account"
-  });
-}
+const themes = { dark, light };
+
+Router.events.on("routeChangeStart", () => AppState.setLoading(true));
+Router.events.on("routeChangeComplete", () => AppState.setLoading(false));
 
 @observer
 class GXAccountApp extends App {
   static getInitialProps({ req }) {
     if (req) {
-      console.log(req.headers);
       const protocol = req.headers["x-forwarded-proto"];
       const host = req.headers["x-forwarded-host"] || req.headers.host;
       AppState.baseURL = `${protocol}://${host}`;
@@ -53,13 +49,12 @@ class GXAccountApp extends App {
       <>
         <Head>
           <title>Conta Guru</title>
-          <meta charset="UTF-8" />
           <meta
             name="viewport"
             content="minimum-scale=1, initial-scale=1, width=device-width"
           />
         </Head>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={themes[AppState.theme]}>
           <CssBaseline />
           <AppBar />
           <Component {...pageProps} style={{ paddingTop: 64 }} />

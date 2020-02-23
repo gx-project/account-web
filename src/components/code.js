@@ -12,14 +12,9 @@ import {
 import StepNextButton from "./stepButton";
 import Form from "./register/form";
 
-function CodeStep({ error, title, to, onSubmit, onChange }) {
+function CodeStep({ error, to, onSubmit, onChange }) {
   return (
     <>
-      {title && (
-        <Typography style={{ margin: "5% 0" }} component="h1" variant="h5">
-          {title}
-        </Typography>
-      )}
       {to && (
         <Typography
           style={{ marginTop: "3%", width: "100%", fontWeight: "bold" }}

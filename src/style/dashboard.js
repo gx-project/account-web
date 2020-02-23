@@ -44,7 +44,12 @@ export const styles = theme => ({
     position: "relative",
     left: "50%",
     transform: "translateX(-50%)",
-    border: "5px solid #212121"
+    border: "2px solid",
+    borderColor:
+      theme.palette.type === "dark"
+        ? theme.palette.secondary.main
+        : theme.palette.primary.main,
+    boxShadow: `0px 0px 100px -30px ${theme.palette.primary.main}`
   },
   name: {
     textAlign: "center",

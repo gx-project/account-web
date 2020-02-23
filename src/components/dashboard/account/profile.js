@@ -1,13 +1,13 @@
 import { observer } from "mobx-react";
 import Router from "next/router";
 
+import { withTheme } from "@material-ui/core/styles";
 import {
   Avatar,
   Badge,
   Typography,
   Grid,
   TextField,
-  ExpansionPanelActions,
   Button,
   FormControl,
   FormHelperText
@@ -17,7 +17,7 @@ import { AccountState } from "../../../stores/dashboard";
 
 import { stylesHook, EditIcon } from "../../../style/dashboard";
 
-export default observer(function Profile() {
+function Profile({ theme }) {
   const classes = stylesHook();
   const { data, errors } = AccountState;
 
@@ -36,10 +36,9 @@ export default observer(function Profile() {
           <Grid item xs={12}>
             <Badge
               className={classes.avatarContainer}
-              overlap="circle"
-              badgeContent={
-                <EditIcon onClick={() => Router.push("/dashboard/photo")} />
-              }
+              color="secondary"
+              onClick={() => Router.push("/dashboard/photo")}
+              badgeContent={<EditIcon style={{ background: "transparent" }} />}
             >
               <Avatar
                 className={classes.avatar}
@@ -94,17 +93,26 @@ export default observer(function Profile() {
             </FormControl>
           </Grid>
         </Grid>
-        <ExpansionPanelActions>
+        <div
+          style={{
+            display: "flex",
+            padding: theme.spacing(2, 0),
+            flexDirection: "column"
+          }}
+        >
           <Button
             variant="contained"
             size="small"
             color="primary"
             type="submit"
+            style={{ alignSelf: "flex-end" }}
           >
             Alterar
           </Button>
-        </ExpansionPanelActions>
+        </div>
       </form>
     </>
   );
-});
+}
+
+export default withTheme(observer(Profile));

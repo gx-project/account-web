@@ -3,7 +3,7 @@ import { Typography } from "@material-ui/core";
 import State from "../../stores/register";
 import StepButton from "../stepButton";
 
-export default function Terms() {
+function Terms() {
   return (
     <>
       <Typography style={{ margin: "5% 0" }} component="h1" variant="h5">
@@ -13,7 +13,7 @@ export default function Terms() {
         style={{
           marginTop: "3%",
           width: "100%",
-          maxHeight: "200px",
+          maxHeight: "340px",
           overflowX: "scroll"
         }}
         component="h3"
@@ -41,3 +41,5 @@ export default function Terms() {
     </>
   );
 }
+
+export default Terms;
