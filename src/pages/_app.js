@@ -1,4 +1,3 @@
-import "../style/base.css";
 import React from "react";
 import App from "next/app";
 import Head from "next/head";
@@ -6,12 +5,8 @@ import Router from "next/router";
 import { observer } from "mobx-react";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import storage from "localforage";
-import Alert from "@material-ui/lab/Alert";
-import { Snackbar } from "@material-ui/core";
 
-import AppState from "../stores";
-import { AppBar } from "../components/";
+import AppState from "../stores/app";
 import { dark, light } from "../style/theme";
 
 const themes = { dark, light };
@@ -35,6 +30,13 @@ class GXAccountApp extends App {
     return {};
   }
 
+  constructor() {
+    super();
+    if (typeof window !== "undefined") {
+      AppState.init();
+    }
+  }
+
   async componentDidMount() {
     const jssStyles = document.querySelector("#jss-server-side");
     if (jssStyles) {
@@ -56,21 +58,7 @@ class GXAccountApp extends App {
         </Head>
         <ThemeProvider theme={themes[AppState.theme]}>
           <CssBaseline />
-          <AppBar />
           <Component {...pageProps} style={{ paddingTop: 64 }} />
-          <Snackbar
-            open={AppState.message.open}
-            autoHideDuration={AppState.message.duration}
-            onClose={(e, reason) => AppState.handleCloseMessage(e, reason)}
-          >
-            <Alert
-              onClose={(e, reason) => AppState.handleCloseMessage(e, reason)}
-              severity={AppState.message.type}
-              variant={AppState.message.variant}
-            >
-              {AppState.message.content}
-            </Alert>
-          </Snackbar>
           <div
             className={`gx-line-container${AppState.loading ? " loading" : ""}`}
           >

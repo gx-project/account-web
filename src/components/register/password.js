@@ -1,12 +1,13 @@
 import { observer } from "mobx-react";
 import { Typography, FormControl, FormHelperText } from "@material-ui/core";
 
-import State from "../../stores/register";
-import { PasswordInput, StepButton } from "../";
+import { Register } from "../../stores";
+import PasswordInput from "../passwordInput";
+import StepButton from "../stepButton";
 import Form from "./form";
 
 function PasswordStep() {
-  const { password: error } = State.errors;
+  const { password: error } = Register.errors;
   return (
     <>
       <Typography style={{ margin: "5% 0" }} component="h1" variant="h5">
@@ -24,7 +25,7 @@ function PasswordStep() {
       <Form
         onSubmit={e => {
           e && e.preventDefault();
-          State.finish();
+          Register.finish();
         }}
       >
         <PasswordInput
@@ -33,7 +34,7 @@ function PasswordStep() {
           id="pw"
           label="Senha"
           onChange={({ target: { value } }) => {
-            State.setPassword(value);
+            Register.setPassword(value);
           }}
           error={!!error}
         />
@@ -41,7 +42,10 @@ function PasswordStep() {
           <FormHelperText>{error}</FormHelperText>
         </FormControl>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <StepButton loading={State.loading} style={{ alignSelf: "flex-end" }}>
+          <StepButton
+            loading={Register.loading}
+            style={{ alignSelf: "flex-end" }}
+          >
             confirmar
           </StepButton>
         </div>

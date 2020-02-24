@@ -5,9 +5,9 @@ import AvatarEditor from "react-avatar-editor";
 import { Slider } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
-import { AccountState } from "../stores/dashboard";
-import State from "../stores/register";
-import { StepButton } from "./";
+import { Dashboard, Register } from "../stores";
+
+import StepButton from "./stepButton";
 
 function PictureStep({ onResult, onSend, current, theme, classes, ...props }) {
   const [changed, setChanged] = useState(false);
@@ -77,7 +77,7 @@ function PictureStep({ onResult, onSend, current, theme, classes, ...props }) {
               const el = editor.getImageScaledToCanvas();
               el.toBlob(async photo => {
                 setChanged(false);
-                const result = await AccountState.setUpdate(
+                const result = await Dashboard.Account.setUpdate(
                   "photo",
                   { photo },
                   true
@@ -85,7 +85,7 @@ function PictureStep({ onResult, onSend, current, theme, classes, ...props }) {
                 onResult && onResult(result);
               });
             }}
-            loading={State.loading}
+            loading={Register.loading}
           >
             salvar
           </StepButton>

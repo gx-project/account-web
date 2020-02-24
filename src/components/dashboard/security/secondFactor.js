@@ -14,17 +14,17 @@ import {
   Typography
 } from "@material-ui/core";
 
-import { AccountState } from "../../../stores/dashboard";
+import { Account } from "../../../stores";
 import { stylesHook } from "../../../style/dashboard";
 
 function AuthSecondFactor() {
   const { formControl } = stylesHook();
-  const { authSecondFactor, emails, phones, ncode } = AccountState.data;
+  const { authSecondFactor, emails, phones, ncode } = Account.data;
 
   const activated = !!authSecondFactor;
 
   const handleChange = function(e, value) {
-    AccountState.setUpdate(
+    Account.setUpdate(
       "auth",
       {
         authSecondFactor: value
@@ -39,7 +39,7 @@ function AuthSecondFactor() {
   ];
 
   const switchHandler = () =>
-    AccountState.setUpdate(
+    Account.setUpdate(
       "auth",
       {
         authSecondFactor: !activated ? contacts[0][1] : false

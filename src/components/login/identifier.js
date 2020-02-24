@@ -6,7 +6,8 @@ import {
   Button
 } from "@material-ui/core";
 
-import { RichInput, StepButton } from "../";
+import RichInput from "../richInput";
+import StepButton from "../stepButton";
 import Bottom from "./bottom";
 
 function Identifier({ next, error, loading, ...props }) {

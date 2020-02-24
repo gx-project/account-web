@@ -1,7 +1,8 @@
 import { observer } from "mobx-react";
 import { FormControl, FormHelperText } from "@material-ui/core";
 
-import { RichInput, StepButton } from "..";
+import RichInput from "../richInput";
+import StepButton from "../stepButton";
 
 function NumberStep({ next, error, Top = null, Bottom = null, ...props }) {
   return (

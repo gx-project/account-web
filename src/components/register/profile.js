@@ -6,12 +6,13 @@ import {
   Grid
 } from "@material-ui/core";
 
-import State from "../../stores/register";
-import { RichInput, StepButton } from "../";
+import { Register } from "../../stores";
+import RichInput from "../richInput";
+import StepButton from "../stepButton";
 import Form from "./form";
 
 function ProfileStep() {
-  const { username, fn, ln } = State.errors;
+  const { username, fn, ln } = Register.errors;
   return (
     <>
       <Typography style={{ margin: "5% 0" }} component="h1" variant="h5">
@@ -20,7 +21,7 @@ function ProfileStep() {
       <Form
         onSubmit={e => {
           e && e.preventDefault();
-          State.sendNames();
+          Register.sendNames();
         }}
         style={{ width: "94%", margin: "0 auto" }}
       >
@@ -28,7 +29,7 @@ function ProfileStep() {
           <Grid item xs={12}>
             <RichInput
               onChange={({ value }) => {
-                State.setNames("username", value);
+                Register.setNames("username", value);
               }}
               fullWidth
               label="Usuário"
@@ -45,7 +46,7 @@ function ProfileStep() {
           <Grid item xs={6}>
             <RichInput
               onChange={({ value }) => {
-                State.setNames("fn", value);
+                Register.setNames("fn", value);
               }}
               fullWidth
               label="Nome"
@@ -61,7 +62,7 @@ function ProfileStep() {
           <Grid item xs={6}>
             <RichInput
               onChange={({ value }) => {
-                State.setNames("ln", value);
+                Register.setNames("ln", value);
               }}
               fullWidth
               label="Sobrenome"
@@ -76,7 +77,10 @@ function ProfileStep() {
           </Grid>
         </Grid>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <StepButton loading={State.loading} style={{ alignSelf: "flex-end" }}>
+          <StepButton
+            loading={Register.loading}
+            style={{ alignSelf: "flex-end" }}
+          >
             Próximo
           </StepButton>
         </div>

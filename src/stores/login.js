@@ -1,6 +1,6 @@
 import { observable, action } from "mobx";
 import Router from "next/router";
-import App from "./index";
+import App from "./app";
 import Dashboard from "./dashboard";
 
 import { regex, wait } from "../utils";

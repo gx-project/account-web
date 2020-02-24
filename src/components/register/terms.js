@@ -1,6 +1,6 @@
 import { Typography } from "@material-ui/core";
 
-import State from "../../stores/register";
+import { Register } from "../../stores";
 import StepButton from "../stepButton";
 
 function Terms() {
@@ -32,9 +32,9 @@ function Terms() {
       <StepButton
         onClick={e => {
           e.preventDefault();
-          State.acceptTerms();
+          Register.acceptTerms();
         }}
-        loading={State.loading}
+        loading={Register.loading}
       >
         Aceito
       </StepButton>

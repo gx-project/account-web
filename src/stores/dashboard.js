@@ -1,13 +1,10 @@
 import Router from "next/router";
 import { observable, action } from "mobx";
 
-import { STORE_TOKEN_KEY, STORE_ACCOUNT_KEY } from "../../constants";
-import { wait } from "../../utils";
-import { auth } from "../../api";
-import App from "../";
+import { STORE_TOKEN_KEY, STORE_ACCOUNT_KEY } from "../constants";
+import App from "./app";
+import { auth } from "../api";
 import AccountState from "./account";
-
-export { AccountState };
 
 class DashboardState {
   @observable initialized = false;
@@ -18,15 +15,8 @@ class DashboardState {
     this.panel = panel;
   }
 
-  constructor() {
-    if (typeof window !== "undefined") {
-      this.init();
-    }
-  }
-
   @action async init(token) {
     try {
-      await wait(300);
       this.token = token || (await App.storage.getItem(STORE_TOKEN_KEY));
       if (this.token) await AccountState.hydrate();
     } catch (e) {

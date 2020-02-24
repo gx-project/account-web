@@ -2,8 +2,10 @@ import { Component } from "react";
 import Router from "next/router";
 import { withStyles } from "@material-ui/core/styles";
 import { Box, Typography, Link } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
+import { Snackbar } from "@material-ui/core";
 
-import DashboardState from "../stores/dashboard";
+import { App, Dashboard } from "../stores";
 import LoadingPage from "../components/loadingPage";
 
 class PageWrapper extends Component {
@@ -12,18 +14,16 @@ class PageWrapper extends Component {
   };
 
   async componentDidMount() {
-    if (!DashboardState.initialized) {
-      await DashboardState.init();
+    if (!Dashboard.initialized) {
+      await Dashboard.init();
     }
 
     switch (this.props.auth) {
       case true:
-        if (!DashboardState.token)
-          return Router.push(this.props.redirect || "/");
+        if (!Dashboard.token) return Router.push(this.props.redirect || "/");
         break;
       case false:
-        if (DashboardState.token)
-          return Router.push(this.props.redirect || "/");
+        if (Dashboard.token) return Router.push(this.props.redirect || "/");
         break;
     }
     this.setState({ render: true });
@@ -36,6 +36,19 @@ class PageWrapper extends Component {
       <>
         <div className={classes.root} style={{ paddingTop: 64 }} {...props}>
           {children}
+          <Snackbar
+            open={App.message.open}
+            autoHideDuration={App.message.duration}
+            onClose={(e, reason) => App.handleCloseMessage(e, reason)}
+          >
+            <Alert
+              onClose={(e, reason) => App.handleCloseMessage(e, reason)}
+              severity={App.message.type}
+              variant={App.message.variant}
+            >
+              {App.message.content}
+            </Alert>
+          </Snackbar>
           <Box mt={2} className={classes.footer} component="footer">
             <Typography variant="body2" color="textSecondary" align="center">
               <Link color="inherit" href="#">

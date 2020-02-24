@@ -8,7 +8,7 @@ import {
   FormHelperText
 } from "@material-ui/core";
 
-import State from "../../stores/register";
+import { Register } from "../../stores";
 import StepButton from "../stepButton";
 import Form from "./form";
 
@@ -29,17 +29,17 @@ function CPFStep() {
       <Form
         onSubmit={e => {
           e && e.preventDefault();
-          State.sendCPF();
+          Register.sendCPF();
         }}
       >
         <NumberFormat
           onValueChange={({ value }) => {
-            State.setCPF(value);
+            Register.setCPF(value);
           }}
           isNumericString
           format="### . ### . ### - ##"
           customInput={TextField}
-          error={!!State.errors.cpf}
+          error={!!Register.errors.cpf}
           label="CPF"
           fullWidth
           style={{
@@ -49,28 +49,31 @@ function CPFStep() {
         />
         <FormControl
           error
-          style={{ display: State.errors.cpf ? "initial" : "none" }}
+          style={{ display: Register.errors.cpf ? "initial" : "none" }}
         >
-          <FormHelperText>{State.errors.cpf}</FormHelperText>
+          <FormHelperText>{Register.errors.cpf}</FormHelperText>
         </FormControl>
         <NumberFormat
-          onValueChange={values => State.setBirth(values)}
+          onValueChange={values => Register.setBirth(values)}
           isNumericString
           format="##/##/####"
           customInput={TextField}
-          error={!!State.errors.birth}
+          error={!!Register.errors.birth}
           label="Nascimento"
           mask="_"
           fullWidth
         />
         <FormControl
           error
-          style={{ display: State.errors.birth ? "initial" : "none" }}
+          style={{ display: Register.errors.birth ? "initial" : "none" }}
         >
-          <FormHelperText>{State.errors.birth}</FormHelperText>
+          <FormHelperText>{Register.errors.birth}</FormHelperText>
         </FormControl>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <StepButton loading={State.loading} style={{ alignSelf: "flex-end" }}>
+          <StepButton
+            loading={Register.loading}
+            style={{ alignSelf: "flex-end" }}
+          >
             verificar
           </StepButton>
         </div>

@@ -1,9 +1,11 @@
 import { observer } from "mobx-react";
 
-import { Page } from "../../components";
+import AppBar from "../../components/dashboard/appBar";
+import Page from "../../components/page";
 function HistoryPage() {
   return (
     <Page auth={true} redirect="/login">
+      <AppBar />
       asd
     </Page>
   );

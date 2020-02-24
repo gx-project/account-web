@@ -5,8 +5,12 @@ import SwipeableViews from "react-swipeable-views";
 import { withTheme } from "@material-ui/core/styles";
 import { Container, Typography } from "@material-ui/core";
 
-import App, { Login } from "../stores";
-import { Page, CodeStep, Login as LoginComponents } from "../components";
+import { App, Login } from "../stores";
+
+import Page from "../components/page";
+import CodeStep from "../components/code";
+import * as LoginComponents from "../components/login";
+
 import { stylesHook } from "../style/login";
 
 const Step = withTheme(function({ theme, ...props }) {

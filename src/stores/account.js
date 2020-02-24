@@ -1,21 +1,25 @@
 import { observable, action, toJS } from "mobx";
 import { isValidEmail } from "@brazilian-utils/brazilian-utils";
 
-import App from "../";
-import { STORE_ACCOUNT_KEY } from "../../constants";
-import { regex } from "../../utils";
-import { account } from "../../api";
+import App from "./app";
+import { STORE_ACCOUNT_KEY } from "../constants";
+import { regex } from "../utils";
+import { account } from "../api";
 
 class DashboardAccount {
   @observable initialized = false;
   @observable loading = { auth: false, password: false, profile: false };
-  @observable errors = { password: {}, profile: {}, response: false };
   @observable data = {};
+  @observable errors = {
+    password: {},
+    profile: {},
+    contact: {},
+    response: false
+  };
 
   updateData = {};
 
   @action async hydrate(save) {
-    console.log("save", save);
     if (save) {
       this.data = { ...this.data, ...save };
       await App.storage.setItem(STORE_ACCOUNT_KEY, toJS(this.data));
@@ -55,11 +59,11 @@ class DashboardAccount {
   @action async update() {
     const [action] = Object.keys(this.updateData);
 
-    if (!action) return;
+    if (!action) return false;
 
     this.errors[action] = {};
 
-    if (!this.validation(action)) return;
+    if (!this.validation(action)) return false;
 
     const { ok, data, status } = await account.update(
       action,
@@ -109,6 +113,26 @@ class DashboardAccount {
         }
 
         break;
+      case "contact":
+        const { contact } = this.updateData;
+        if ("add" in contact) {
+          const isPhone = regex.phone.test(contact.add);
+          if (!isPhone && !isValidEmail(contact.add)) {
+            this.errors.contact.add =
+              "Precisa ser um número de celular ou email";
+            return false;
+          }
+
+          const type = isPhone ? "phones" : "emails";
+          if (this.data[type].indexOf(contact.add) !== -1) {
+            this.errors.contact.add = `Você já adicionou esse ${
+              type === "phones" ? "número" : "email"
+            }`;
+            return false;
+          }
+        }
+
+        break;
     }
 
     return true;
@@ -120,8 +144,8 @@ class DashboardAccount {
         await this.hydrate({ photo: data.url });
         break;
       case "contact":
-        const { add, remove } = this.updateData.contact;
-        if (add) {
+        const { add, code, remove } = this.updateData.contact;
+        if (code && add) {
           const field = isValidEmail(add) ? "emails" : "phones";
           const current = [...this.data[field]];
 
@@ -148,18 +172,20 @@ class DashboardAccount {
     this.updateData = {};
   }
 
-  handleErrors({ action, status, data }) {
-    if (action) {
-      switch (action) {
-        case "password":
-          if (data.message === "invalid password") {
-            App.setMessage({
-              content: "Você errou sua senha atual.",
-              type: "error"
-            });
-          }
-          break;
-      }
+  @action handleErrors({ action, status, data }) {
+    switch (action) {
+      case "password":
+        if (data.message === "invalid password") {
+          App.setMessage({
+            content: "Você errou sua senha atual.",
+            type: "error"
+          });
+        }
+        break;
+      case "contact":
+        if (data.message === "in use") {
+          this.errors.contact.add = "Em uso";
+        }
     }
   }
 }

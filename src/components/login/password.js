@@ -12,7 +12,8 @@ import {
 import { ArrowBackIos } from "@material-ui/icons";
 
 import LoginState from "../../stores/login";
-import { StepButton, PasswordInput } from "../";
+import StepButton from "../stepButton";
+import PasswordInput from "../passwordInput";
 import Bottom from "./bottom";
 
 function NumberStep({ user, next, loading, error }) {

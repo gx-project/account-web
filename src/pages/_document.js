@@ -8,16 +8,24 @@ export default class Document extends NextDocument {
     return (
       <html lang="en">
         <Head>
-          {/* PWA primary color */}
           <meta name="theme-color" content={dark.palette.primary.main} />
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
+          <style>
+            {`
+            html,
+            body,
+            #__next {
+              width: 100%;
+              height: 100%;
+            }`}
+          </style>
         </Head>
         <body>
           <Main />
-          <NextScript />
+          <NextScript style={{ height: "100%" }} />
         </body>
       </html>
     );

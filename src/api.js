@@ -1,8 +1,7 @@
 import Router from "next/router";
 import { API_ENDPOINT, STORE_TOKEN_KEY, STORE_ACCOUNT_KEY } from "./constants";
-import App, { Dashboard } from "./stores";
+import { App, Dashboard } from "./stores";
 import fetch from "isomorphic-unfetch";
-import storage from "localforage";
 
 function request(
   endpoint,

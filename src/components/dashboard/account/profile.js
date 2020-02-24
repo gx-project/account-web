@@ -13,13 +13,13 @@ import {
   FormHelperText
 } from "@material-ui/core";
 
-import { AccountState } from "../../../stores/dashboard";
+import { Account } from "../../../stores";
 
 import { stylesHook, EditIcon } from "../../../style/dashboard";
 
 function Profile({ theme }) {
   const classes = stylesHook();
-  const { data, errors } = AccountState;
+  const { data, errors } = Account;
 
   return (
     <>
@@ -29,7 +29,7 @@ function Profile({ theme }) {
       <form
         onSubmit={e => {
           e.preventDefault();
-          AccountState.update();
+          Account.update();
         }}
       >
         <Grid container spacing={2}>
@@ -43,7 +43,7 @@ function Profile({ theme }) {
               <Avatar
                 className={classes.avatar}
                 style={{ height: "130px", width: "130px" }}
-                src={AccountState.data.photo}
+                src={Account.data.photo}
               />
             </Badge>
           </Grid>
@@ -56,7 +56,7 @@ function Profile({ theme }) {
               label="Nome"
               defaultValue={data.fn}
               onChange={({ target: { value } }) => {
-                AccountState.setUpdate("profile", { fn: value });
+                Account.setUpdate("profile", { fn: value });
               }}
               inputProps={{
                 style: { textTransform: "capitalize" }
@@ -78,7 +78,7 @@ function Profile({ theme }) {
               autoComplete="lname"
               defaultValue={data.ln}
               onChange={({ target: { value } }) => {
-                AccountState.setUpdate("profile", { ln: value });
+                Account.setUpdate("profile", { ln: value });
                 // updateData.profile.ln = value;
               }}
               inputProps={{

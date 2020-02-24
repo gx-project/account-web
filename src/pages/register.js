@@ -6,11 +6,14 @@ import SwipeableViews from "react-swipeable-views";
 import NumberFormat from "react-number-format";
 import { Container, Typography } from "@material-ui/core";
 import { withTheme } from "@material-ui/core/styles";
-import State from "../stores/register";
-import { Page, PhotoEditor, Register, CodeStep } from "../components";
-import { stylesHook } from "../style/login";
+import { Register as RegisterStore } from "../stores";
 
-const { Terms, Number, CPF, Profile, Password } = Register;
+import Page from "../components/page";
+import PhotoEditor from "../components/photoEditor";
+import CodeStep from "../components/code";
+import { Terms, Number, CPF, Profile, Password } from "../components/register";
+
+import { stylesHook } from "../style/login";
 
 function Step({ children }) {
   const { container } = stylesHook();
@@ -21,7 +24,7 @@ function Step({ children }) {
 function RegisterPage({ theme }) {
   const { container } = stylesHook();
 
-  useEffect(() => () => State.clear(), []);
+  useEffect(() => () => RegisterStore.clear(), []);
 
   return (
     <Page auth={false} redirect="/dashboard">
@@ -29,21 +32,21 @@ function RegisterPage({ theme }) {
         <title>Cadastro | Conta Guru</title>
       </Head>
       <Container component="main" maxWidth="sm" className={container}>
-        {!State.termsAccept ? (
+        {!RegisterStore.termsAccept ? (
           <Terms />
         ) : (
           <SwipeableViews
-            index={State.step}
+            index={RegisterStore.step}
             disabled={true}
             style={{ width: "100%" }}
           >
             <Step>
               <Number
-                error={State.errors.number}
-                onChange={({ value }) => State.setNumber(value)}
+                error={RegisterStore.errors.number}
+                onChange={({ value }) => RegisterStore.setNumber(value)}
                 next={e => {
                   e.preventDefault && e.preventDefault();
-                  State.requestCode();
+                  RegisterStore.requestCode();
                 }}
                 Top={
                   <Typography
@@ -67,14 +70,14 @@ function RegisterPage({ theme }) {
                     displayType="text"
                     isNumericString
                     format="(##) #####-####"
-                    value={State.nbr}
+                    value={RegisterStore.nbr}
                     // value={State.nbr}
                     style={{ fontSize: "1.3rem" }}
                   />
                 }
-                error={State.errors.code}
-                onChange={value => (State.code = value)}
-                onSubmit={() => State.sendCode()}
+                error={RegisterStore.errors.code}
+                onChange={value => (RegisterStore.code = value)}
+                onSubmit={() => RegisterStore.sendCode()}
               />
             </Step>
             <Step children={<CPF />} />

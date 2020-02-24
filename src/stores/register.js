@@ -1,6 +1,6 @@
 import { observable, action } from "mobx";
-import AppState from ".";
-import Dashboard, { AccountState } from "./dashboard";
+import AppState from "./app";
+import Dashboard from "./dashboard";
 
 import { isValidCPF } from "@brazilian-utils/brazilian-utils";
 
@@ -277,7 +277,7 @@ class RegisterState {
     const { ok, data } = await account.photo(blob);
 
     if (ok) {
-      AccountState.hydrate({ photo: data.url });
+      Dashboard.Account.hydrate({ photo: data.url });
     }
 
     return ok;

@@ -1,6 +1,6 @@
 import NumberFormat from "react-number-format";
 import { Typography, Grid, Paper } from "@material-ui/core";
-import { AccountState } from "../../../stores/dashboard";
+import { Account } from "../../../stores";
 import { stylesHook } from "../../../style/dashboard";
 
 export default function StaticData() {
@@ -13,7 +13,7 @@ export default function StaticData() {
             Usuário
           </Typography>
           <Typography variant="subtitle2" gutterBottom>
-            {AccountState.data.username}
+            {Account.data.username}
           </Typography>
           <Typography variant="caption" display="block" gutterBottom>
             CPF
@@ -22,7 +22,7 @@ export default function StaticData() {
             <NumberFormat
               format="###.###.###-##"
               displayType="text"
-              value={AccountState.data.cpf}
+              value={Account.data.cpf}
             />
           </Typography>
         </Paper>

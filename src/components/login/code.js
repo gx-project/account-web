@@ -1,11 +1,11 @@
 import Code from "../code";
-import State from "../../stores/login";
+import Login from "../../stores/login";
 
 function CodeStep() {
   return (
     <Code
-      onChange={value => (State.code = value)}
-      onSubmit={() => State.sendCode()}
+      onChange={value => (Login.code = value)}
+      onSubmit={() => Login.sendCode()}
     />
   );
 }

@@ -1,53 +1,23 @@
-import { useState } from "react";
 import { observer } from "mobx-react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import {
-  MoreVert as MoreIcon,
-  ArrowBackIos as ArrowBackIosIcon,
-  ExitToApp as ExitToAppIcon,
-  Notifications as NotificationsIcon,
-  Brightness7 as DayIcon,
-  Brightness4 as NightIcon
-} from "@material-ui/icons";
+import { ArrowBackIos as ArrowBackIosIcon } from "@material-ui/icons";
 import {
   AppBar,
   Button,
   Container,
   IconButton,
-  Toolbar,
-  Menu,
-  MenuItem
+  Toolbar
 } from "@material-ui/core";
 import { withTheme } from "@material-ui/core/styles";
 
-import App, { Dashboard } from "../stores";
+import { App } from "../stores";
 
-function AppBarComponent({ theme, homeLink = "/", append = null }) {
+function AppBarComponent({ theme, homeLink = "/", children }) {
   const router = useRouter();
-  const [anchorEl, setAnchorEl] = useState(null);
-
   const showBackButton =
     router.route === "/dashboard/history" ||
     router.route === "/dashboard/photo";
-
-  function logout(e) {
-    e.preventDefault();
-
-    Dashboard.logout();
-  }
-
-  const handleMenuClick = event => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const toggleTheme = () => {
-    App.toggleTheme();
-  };
 
   return (
     <AppBar>
@@ -79,37 +49,8 @@ function AppBarComponent({ theme, homeLink = "/", append = null }) {
               }}
             />
           </Link>
-          {append}
-          {Dashboard.token ? (
-            <>
-              <IconButton aria-label="abrir notificações">
-                <NotificationsIcon />
-              </IconButton>
-              <IconButton
-                aria-label="encerrar sessão"
-                onClick={handleMenuClick}
-              >
-                <MoreIcon />
-              </IconButton>
-              <Menu
-                id="appbar-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={!!anchorEl}
-                onClose={handleMenuClose}
-              >
-                <MenuItem onClick={toggleTheme}>
-                  {App.theme === "dark" ? <NightIcon /> : <DayIcon />}
-                  <div style={{ paddingLeft: theme.spacing(2) }}>
-                    Tema: {App.theme === "dark" ? "Escuro" : "Claro"}
-                  </div>
-                </MenuItem>
-                <MenuItem aria-label="encerrar sessão" onClick={logout}>
-                  <ExitToAppIcon />
-                  <div style={{ paddingLeft: theme.spacing(2) }}>Sair</div>
-                </MenuItem>
-              </Menu>
-            </>
+          {children ? (
+            children
           ) : router.route !== "/login" ? (
             <Link href="/login">
               <Button>Entrar</Button>

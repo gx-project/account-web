@@ -8,11 +8,11 @@ import {
   FormHelperText
 } from "@material-ui/core";
 
-import { AccountState } from "../../../stores/dashboard";
+import { Account } from "../../../stores";
 import PasswordInput from "../../passwordInput";
 
 function Password({ theme }) {
-  const { password } = AccountState.errors;
+  const { password } = Account.errors;
 
   return (
     <>
@@ -22,7 +22,7 @@ function Password({ theme }) {
       <form
         onSubmit={e => {
           e.preventDefault();
-          AccountState.update();
+          Account.update();
         }}
       >
         <Grid container spacing={2}>
@@ -31,7 +31,9 @@ function Password({ theme }) {
               fullWidth
               label="Senha atual"
               onChange={e => {
-                AccountState.setUpdate("password", { current: e.target.value });
+                Account.setUpdate("password", {
+                  current: e.target.value
+                });
               }}
               error={!!password.current}
             />
@@ -47,7 +49,9 @@ function Password({ theme }) {
               fullWidth
               label="Nova senha"
               onChange={e => {
-                AccountState.setUpdate("password", { want: e.target.value });
+                Account.setUpdate("password", {
+                  want: e.target.value
+                });
               }}
               error={!!password.want}
             />

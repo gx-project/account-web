@@ -1,6 +1,5 @@
 import { observer } from "mobx-react";
 
-import { isValidEmail } from "@brazilian-utils/brazilian-utils";
 import NumberFormat from "react-number-format";
 import {
   TextField,
@@ -30,12 +29,10 @@ function CodeStep({ error, to, onSubmit, onChange }) {
         onSubmit={e => {
           e && e.preventDefault();
           onSubmit && onSubmit();
-          // State.sendCode();
         }}
       >
         <NumberFormat
           onValueChange={({ value }) => {
-            // State.code = value;
             onChange && onChange(value);
           }}
           isNumericString
