@@ -25,6 +25,7 @@ function LoginPage() {
     <Page auth={false} redirect="/dashboard">
       <Head>
         <title>Entrar | Conta Guru</title>
+        <meta name="description" content="Faça login na sua conta Guru." />
       </Head>
       <Container component="main" maxWidth="sm" className={container}>
         <Typography style={{ margin: "5% 0" }} component="h1" variant="h5">

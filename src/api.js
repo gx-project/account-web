@@ -5,17 +5,11 @@ import fetch from "isomorphic-unfetch";
 
 function request(
   endpoint,
-  { body: content, method = "GET", token = false, headers = {} }
+  { body, method = "GET", token = false, headers = {} }
 ) {
-  let body;
-
-  if (content instanceof Object) {
-    body = new FormData();
-    for (const field in content) {
-      body.append(field, content[field]);
-    }
-  } else {
-    body = content;
+  if (!(body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+    body = JSON.stringify(body);
   }
 
   if (token) {
@@ -35,28 +29,28 @@ async function middleware(request) {
   try {
     App.setLoading(true);
     const response = await request;
-    const data = await response.json();
-    if (
-      response.status === 406 &&
-      (data.message === "invalid token" || data.message === "invalid session")
-    ) {
-      await App.storage.removeItem(STORE_TOKEN_KEY);
-      await App.storage.removeItem(STORE_ACCOUNT_KEY);
 
-      Router.push("/login");
-      return { ok: false, data: {} };
+    if (!response.ok) {
+      const data = await response.json();
+      if (data.code === "100") {
+        {
+          await App.storage.removeItem(STORE_TOKEN_KEY);
+          await App.storage.removeItem(STORE_ACCOUNT_KEY);
+
+          Router.push("/login");
+          return { ok: false, data: {} };
+        }
+      }
     }
 
     return {
       error: false,
       status: response.status,
       ok: response.ok,
-      response,
-      data
+      isJson: /application\/json/.test(response.headers.get("Content-Type")),
+      response
     };
   } catch (error) {
-    console.error(error);
-
     App.setMessage({
       content: "Aconteceu algum problema, tente novamente.",
       type: "error"
@@ -79,19 +73,24 @@ export const account = {
     return request("/account", { token: true });
   },
   photo(photo) {
+    console.log(photo);
     const body = new FormData();
     body.append("photo", photo, "profile.jpg");
 
     return request("/account/photo", { method: "PUT", body, token: true });
   },
   update(action, body, method = "PUT") {
+    if (action === "photo") {
+      return this.photo(body.photo);
+    }
+
     return request(`/account/${action}`, { body, method, token: true });
   }
 };
 
 export const auth = {
   identify(id) {
-    return request("/auth/identify", { method: "POST", body: { id } });
+    return request(`/auth/identify/${id}`, { method: "GET" });
   },
   credential(id, pw) {
     return request("/auth/credential", { method: "POST", body: { id, pw } });

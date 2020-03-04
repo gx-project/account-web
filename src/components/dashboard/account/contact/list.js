@@ -15,6 +15,7 @@ import { App, Account } from "../../../../stores";
 
 function ContactList() {
   const { data } = Account;
+
   const list = [
     ...data.phones.map(phone => ["phone", phone]),
     ...data.emails.map(email => ["email", email])

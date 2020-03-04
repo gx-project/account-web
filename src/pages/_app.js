@@ -50,11 +50,12 @@ class GXAccountApp extends App {
     return (
       <>
         <Head>
-          <title>Conta Guru</title>
+          <title>Contas — Guru - Escolha bem o seu.</title>
           <meta
             name="viewport"
             content="minimum-scale=1, initial-scale=1, width=device-width"
           />
+          <meta name="description" content="Conta Guru, de todos para todos." />
         </Head>
         <ThemeProvider theme={themes[AppState.theme]}>
           <CssBaseline />

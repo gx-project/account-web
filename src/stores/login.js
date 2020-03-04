@@ -28,12 +28,11 @@ class LoginState {
 
     if (!this.verify()) return;
 
-    const { ok, data } = await auth.identify(this.id);
+    const { ok, response } = await auth.identify(this.id);
 
-    if (!ok) return;
-    if (data.user) {
+    if (ok) {
       this.step = 1;
-      this.user = data.user;
+      this.user = await response.json();
       this.error = false;
     } else {
       this.error = "Usuário não encontrado";
@@ -43,24 +42,28 @@ class LoginState {
   @action async sendCredential() {
     if (!this.verify()) return;
 
-    const { ok, data, status } = await auth.credential(this.id, this.password);
+    const { ok, response, status } = await auth.credential(
+      this.id,
+      this.password
+    );
 
     if (ok) {
-      if (data.next === "code") {
+      const data = await response.json();
+      if (status === 200) {
         this.loading = false;
         this.step = 2;
-        this.codeTarget = this.codeTargetIsEqId(data.target)
+        this.codeTarget = this.codeTargetIsEqId(data.content)
           ? this.id
           : data.target.padStart(11, "*");
         return;
       }
 
-      await this.authenticated(data.token);
+      await this.authenticated(data.content);
       await wait(3000);
       this.clear();
     } else {
       switch (status) {
-        case 401:
+        case 422:
           this.error = "Senha inválida";
           break;
         default:
@@ -72,10 +75,10 @@ class LoginState {
   @action async sendCode() {
     if (!this.verify()) return;
 
-    const { ok, data, status } = await auth.code(this.id, this.code);
+    const { ok, response } = await auth.code(this.id, this.code);
 
     if (ok) {
-      await this.authenticated(data.token);
+      await this.authenticated((await response.json()).content);
     } else {
       this.error = "Código inválido";
     }

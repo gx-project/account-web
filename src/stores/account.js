@@ -32,8 +32,9 @@ class DashboardAccount {
       return this.setup(cache);
     }
 
-    const { ok, data } = await account.get();
+    const { ok, response } = await account.get();
     if (ok) {
+      const data = await response.json();
       await App.storage.setItem(STORE_ACCOUNT_KEY, data);
       this.setup(data);
     } else {
@@ -65,16 +66,17 @@ class DashboardAccount {
 
     if (!this.validation(action)) return false;
 
-    const { ok, data, status } = await account.update(
+    const { ok, response, isJson, status } = await account.update(
       action,
       this.updateData[action]
     );
 
-    if (!ok) {
-      this.handleErrors({ action, status, data });
+    if (!ok && isJson) {
+      this.handleErrors(status, await response.json());
       return false;
     }
 
+    const data = isJson ? await response.json() : {};
     await this.postUpdate(action, data);
     return true;
   }
@@ -82,60 +84,14 @@ class DashboardAccount {
   @action validation(action) {
     switch (action) {
       case "password":
-        const {
-          password: { current, want }
-        } = this.updateData;
-        if (!current || current.length < 6) {
-          this.errors.password.current =
-            "Senhas precisam ter no mínimo 6 caracteres";
-          return false;
-        }
-        if (!want || want.length < 6) {
-          this.errors.password.want =
-            "Senhas precisam ter no mínimo 6 caracteres";
-          return false;
-        }
-        break;
+        return this.validatePassword();
       case "profile":
-        const {
-          profile: { fn, ln }
-        } = this.updateData;
-
-        if (!fn && !ln) return false;
-
-        if (!regex.name.test(fn)) {
-          this.errors.profile.fn = "Não parece um nome válido";
-          return false;
-        }
-        if (!regex.name.test(ln)) {
-          this.errors.profile.ln = "Não parece um nome válido";
-          return false;
-        }
-
-        break;
+        return this.validateProfile();
       case "contact":
-        const { contact } = this.updateData;
-        if ("add" in contact) {
-          const isPhone = regex.phone.test(contact.add);
-          if (!isPhone && !isValidEmail(contact.add)) {
-            this.errors.contact.add =
-              "Precisa ser um número de celular ou email";
-            return false;
-          }
-
-          const type = isPhone ? "phones" : "emails";
-          if (this.data[type].indexOf(contact.add) !== -1) {
-            this.errors.contact.add = `Você já adicionou esse ${
-              type === "phones" ? "número" : "email"
-            }`;
-            return false;
-          }
-        }
-
-        break;
+        return this.validateContact();
+      default:
+        return true;
     }
-
-    return true;
   }
 
   async postUpdate(action, data) {
@@ -172,21 +128,81 @@ class DashboardAccount {
     this.updateData = {};
   }
 
-  @action handleErrors({ action, status, data }) {
-    switch (action) {
-      case "password":
-        if (data.message === "invalid password") {
-          App.setMessage({
-            content: "Você errou sua senha atual.",
-            type: "error"
-          });
-        }
-        break;
-      case "contact":
-        if (data.message === "in use") {
-          this.errors.contact.add = "Em uso";
-        }
+  @action handleErrors(status, data) {
+    if (status === 422) {
+      return App.setMessage({
+        content: data.message,
+        type: "error"
+      });
     }
+
+    App.setMessage({
+      content: "Aconteceu algum erro interno, tente novamente.",
+      type: "error"
+    });
+  }
+
+  /**
+   * Validations
+   */
+  validatePassword() {
+    const {
+      password: { current, want }
+    } = this.updateData;
+
+    if (!current || current.length < 6) {
+      this.errors.password.current =
+        "Senhas precisam ter no mínimo 6 caracteres";
+      return false;
+    }
+
+    if (!want || want.length < 6) {
+      this.errors.password.want = "Senhas precisam ter no mínimo 6 caracteres";
+      return false;
+    }
+
+    return true;
+  }
+
+  validateProfile() {
+    const {
+      profile: { fn, ln }
+    } = this.updateData;
+
+    if (!fn && !ln) return false;
+
+    if (!regex.name.test(fn)) {
+      this.errors.profile.fn = "Não parece um nome válido";
+      return false;
+    }
+
+    if (!regex.name.test(ln)) {
+      this.errors.profile.ln = "Não parece um nome válido";
+      return false;
+    }
+
+    return true;
+  }
+
+  validateContact() {
+    const { contact } = this.updateData;
+    if ("add" in contact) {
+      const isPhone = regex.phone.test(contact.add);
+      if (!isPhone && !isValidEmail(contact.add)) {
+        this.errors.contact.add = "Precisa ser um número de celular ou email";
+        return false;
+      }
+
+      const type = isPhone ? "phones" : "emails";
+      if (this.data[type].indexOf(contact.add) !== -1) {
+        this.errors.contact.add = `Você já adicionou esse ${
+          type === "phones" ? "número" : "email"
+        }`;
+        return false;
+      }
+    }
+
+    return true;
   }
 }
 

@@ -30,6 +30,7 @@ function RegisterPage({ theme }) {
     <Page auth={false} redirect="/dashboard">
       <Head>
         <title>Cadastro | Conta Guru</title>
+        <meta name="description" content="Faça agora seu cadastro no Guru." />
       </Head>
       <Container component="main" maxWidth="sm" className={container}>
         {!RegisterStore.termsAccept ? (
