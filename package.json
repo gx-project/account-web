@@ -20,7 +20,7 @@
     "localforage": "^1.7.3",
     "mobx": "^5.15.4",
     "mobx-react": "^6.1.7",
-    "next": "^9.4.4",
+    "next": "^13.0.4",
     "next-offline": "^5.0.0",
     "react": "^16.12.0",
     "react-avatar-editor": "^12.0.0-beta.0",
